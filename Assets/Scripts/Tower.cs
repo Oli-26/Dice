@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Tower : MonoBehaviour
+public class Tower : Selectable
 {
     public float damage = 1f;
     public float shotSpeed = 0.1f;

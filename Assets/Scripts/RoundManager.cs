@@ -23,7 +23,7 @@ public class RoundManager : MonoBehaviour
         SetUpRound1();
     }
 
-    void Update()
+    void FixedUpdate()
     {
         if(Input.GetKeyDown("s")){
             roundTick = 0;
@@ -43,7 +43,6 @@ public class RoundManager : MonoBehaviour
             }
             roundTick++;
         }
-
     }
 
     void SpawnUnit(){

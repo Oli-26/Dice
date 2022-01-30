@@ -13,13 +13,15 @@ public class Shot : MonoBehaviour
         
     }
 
-    void Update()
+    protected void FixedUpdate()
     {
         try{
             Vector3 distance = Target.transform.position - transform.position;
 
             if(Vector3.Distance(new Vector3(0,0,0), distance) < 0.15f){
                 Target.GetComponent<Unit>().TakeDamage(Damage);
+                Destroy(gameObject);
+                return;
             }
 
             Vector3 unitMovementVector = Vector3.Normalize(distance);

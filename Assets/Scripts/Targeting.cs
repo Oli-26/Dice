@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-public enum TargetingMode {First, Strong, Weak, Last};
+public enum TargetingMode {First, Strong, Weak, Last, Closest};
 public class Targeting : MonoBehaviour
 {
     protected TargetingMode Mode = TargetingMode.First;
@@ -43,10 +43,30 @@ public class Targeting : MonoBehaviour
                 case TargetingMode.Last:
                     TargetLast(range);
                     break;
+                case TargetingMode.Closest:
+                    TargetClosest(range);
+                    break;
                 default:
                     TargetFirst(range);
                     break;
           }
+    }
+
+    protected virtual void TargetClosest(float range){
+        GameObject[] enemies = Manager.GetComponent<RoundManager>().GetAliveUnits();
+        float leastDistance = range + 1f;
+        TargetSet = false;
+
+        for(int i = 0; i < enemies.Length; i++){
+            if(Vector3.Distance(enemies[i].transform.position, transform.position) < range){
+                float distance = Vector3.Distance(enemies[i].transform.position, transform.position);
+                if(distance < leastDistance){
+                    Target = enemies[i];
+                    leastDistance = distance;
+                    TargetSet = true;
+                }
+            }
+        }  
     }
 
     protected virtual void TargetFirst(float range){

@@ -21,7 +21,7 @@ public class Unit : MonoBehaviour
         TargetPosition = Grid.GetNthSquareOnPath(PathPosition);
     }
 
-    void Update()
+    void FixedUpdate()
     {
         if(Moving){
             Move();

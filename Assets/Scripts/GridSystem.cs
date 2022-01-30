@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class GridSystem : MonoBehaviour
 {
-    public Square[,] grid = new Square[16,10];
-    public List<Square> path = new List<Square>();
+    public GameObject[,] grid = new GameObject[16,10];
+    public List<GameObject> path = new List<GameObject>();
+
+    public Sprite HighlightedSquareSprite;
     void Start()
     {
         InitialiseGrid();
@@ -21,8 +23,9 @@ public class GridSystem : MonoBehaviour
     void InitialiseGrid(){
         for(int x = 0; x < 16; x++){
             for(int y= 0; y < 10; y++){
-                grid[x,y] = ScriptableObject.CreateInstance<Square>();
-                grid[x,y].Initialise(x, y, gameObject);
+                grid[x,y] = new GameObject();
+                grid[x,y].AddComponent<Square>();
+                grid[x,y].GetComponent<Square>().Initialise(x, y, gameObject, HighlightedSquareSprite);
             }
         }
     }
@@ -45,6 +48,16 @@ public class GridSystem : MonoBehaviour
     }
 
     public Vector3 GetNthSquareOnPath(int n){
-        return path[n].squareGameObject.transform.position;
+        return path[n].transform.position;
     }
+
+    public void HighLightGridPosition(Vector3 position){
+        if(position.x > 0 && position.x < 16 && position.y > 0 && position.y < 10){
+            int xPos = (int)Mathf.Ceil(position.x) - 1;
+            int yPos = (int)Mathf.Ceil(position.y) - 1;
+            grid[xPos, yPos].GetComponent<Square>().HighLight();
+        }
+    }
+
+
 }

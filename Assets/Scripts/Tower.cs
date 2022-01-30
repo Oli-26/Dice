@@ -15,7 +15,7 @@ public class Tower : MonoBehaviour
         
     }
 
-    void Update()
+    protected void FixedUpdate()
     {
         if(nextShot < 0){
             Attack();

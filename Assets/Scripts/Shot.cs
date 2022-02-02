@@ -8,6 +8,13 @@ public class Shot : MonoBehaviour
     public GameObject Target;
     public float Damage;
     public float Speed;
+
+    protected Transform _transform;
+
+    protected void Awake(){
+        _transform = transform;
+    }
+
     void Start()
     {
         
@@ -16,7 +23,7 @@ public class Shot : MonoBehaviour
     protected void FixedUpdate()
     {
         try{
-            Vector3 distance = Target.transform.position - transform.position;
+            Vector3 distance = Target.transform.position - _transform.position;
 
             if(Vector3.Distance(new Vector3(0,0,0), distance) < 0.15f){
                 Target.GetComponent<Unit>().TakeDamage(Damage);
@@ -25,7 +32,7 @@ public class Shot : MonoBehaviour
             }
 
             Vector3 unitMovementVector = Vector3.Normalize(distance);
-            transform.position += unitMovementVector * Speed;
+            _transform.position += unitMovementVector * Speed;
 
         }catch(Exception e){
             Destroy(gameObject);

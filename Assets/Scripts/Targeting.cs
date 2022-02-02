@@ -58,7 +58,8 @@ public class Targeting : MonoBehaviour
         TargetSet = false;
 
         for(int i = 0; i < enemies.Length; i++){
-            if(Vector3.Distance(enemies[i].transform.position, transform.position) < range){
+            Unit enemy = enemies[i].GetComponent<Unit>();
+            if(Vector3.Distance(enemies[i].transform.position, transform.position) < range && !enemy.IsOverKilled()){
                 float distance = Vector3.Distance(enemies[i].transform.position, transform.position);
                 if(distance < leastDistance){
                     Target = enemies[i];
@@ -75,7 +76,8 @@ public class Targeting : MonoBehaviour
         TargetSet = false;
 
         for(int i = 0; i < enemies.Length; i++){
-            if(Vector3.Distance(enemies[i].transform.position, transform.position) < range){
+            Unit enemy = enemies[i].GetComponent<Unit>();
+            if(Vector3.Distance(enemies[i].transform.position, transform.position) < range && !enemy.IsOverKilled()){
                 float lengthTraveled = enemies[i].GetComponent<Unit>().GetDistanceTraveled();
                 if(lengthTraveled > maxDistanceTraveled){
                     Target = enemies[i];
@@ -93,7 +95,8 @@ public class Targeting : MonoBehaviour
         TargetSet = false;
 
         for(int i = 0; i < enemies.Length; i++){
-            if(Vector3.Distance(enemies[i].transform.position, transform.position) < range){
+            Unit enemy = enemies[i].GetComponent<Unit>();
+            if(Vector3.Distance(enemies[i].transform.position, transform.position) < range && !enemy.IsOverKilled()){
                 float enemyTier = enemies[i].GetComponent<Unit>().Tier;
                 float lengthTraveled = enemies[i].GetComponent<Unit>().GetDistanceTraveled();
                 if(enemyTier > highestTier && maxDistanceTraveled < lengthTraveled){
@@ -113,7 +116,8 @@ public class Targeting : MonoBehaviour
         TargetSet = false;
 
         for(int i = 0; i < enemies.Length; i++){
-            if(Vector3.Distance(enemies[i].transform.position, transform.position) < range){
+            Unit enemy = enemies[i].GetComponent<Unit>();
+            if(Vector3.Distance(enemies[i].transform.position, transform.position) < range && !enemy.IsOverKilled()){
                 float enemyTier = enemies[i].GetComponent<Unit>().Tier;
                 float lengthTraveled = enemies[i].GetComponent<Unit>().GetDistanceTraveled();
                 if(enemyTier < lowestTier && maxDistanceTraveled < lengthTraveled){
@@ -132,7 +136,8 @@ public class Targeting : MonoBehaviour
         TargetSet = false;
 
         for(int i = 0; i<enemies.Length; i++){
-            if(Vector3.Distance(enemies[i].transform.position, transform.position) < range){
+            Unit enemy = enemies[i].GetComponent<Unit>();
+            if(Vector3.Distance(enemies[i].transform.position, transform.position) < range && !enemy.IsOverKilled()){
                 float lengthTraveled = enemies[i].GetComponent<Unit>().GetDistanceTraveled();
                 if(lengthTraveled < leastDistanceTraveled){
                     Target = enemies[i];

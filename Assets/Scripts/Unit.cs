@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Unit : MonoBehaviour
 {
+    Transform _transform;
     public int PathPosition = 1;
     Vector3 TargetPosition;
     GridSystem Grid;
@@ -14,6 +15,11 @@ public class Unit : MonoBehaviour
     public float distanceTraveled = 0;
     public int Tier = 1;
     public float speed = 0.035f;
+    float incomingDamage = 0f;
+    void Awake(){
+        _transform = transform;
+    }
+
     void Start()
     {
         Grid = GameObject.FindWithTag("Grid").GetComponent<GridSystem>();
@@ -34,9 +40,9 @@ public class Unit : MonoBehaviour
     }
 
     void MoveTowardsNextPathPoint(){
-        Vector3 unitMovementVector = Vector3.Normalize(TargetPosition - transform.position);
+        Vector3 unitMovementVector = Vector3.Normalize(TargetPosition - _transform.position);
         Vector3 changeVector = unitMovementVector * speed;
-        transform.position += changeVector;
+        _transform.position += changeVector;
         distanceTraveled += Vector3.Distance(new Vector3(0f, 0f, 0f), changeVector);
     }
 
@@ -45,7 +51,7 @@ public class Unit : MonoBehaviour
     }
     
     void FindNextPathPoint(){
-        if(Vector3.Distance(transform.position, TargetPosition) < 0.1f){
+        if(Vector3.Distance(_transform.position, TargetPosition) < 0.1f){
             if(Grid.GetAmountOfPoints() <= PathPosition + 1){
                 Moving = false;
                 FinishRun();
@@ -63,8 +69,21 @@ public class Unit : MonoBehaviour
 
     public void TakeDamage(float damage){
         health -= damage;
+        incomingDamage -= damage;
         if(health <= 0){
             Manager.KillUnit(gameObject);
         }
+    }
+
+    public void TargetedForDamage(float damage){
+        incomingDamage += damage;      
+    }
+
+    public bool IsOverKilled(){
+        if(incomingDamage >= health){
+            return true;
+        }
+        
+        return false;
     }
 }

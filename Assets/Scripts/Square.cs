@@ -8,6 +8,11 @@ public class Square : MonoBehaviour
     public int y;
     public GameObject squareGameObject;
     bool resetOpacity = true;
+    SpriteRenderer _renderer;
+
+    void Awake(){
+        
+    }
 
     void Start()
     {
@@ -17,7 +22,7 @@ public class Square : MonoBehaviour
     void FixedUpdate()
     {
         if(resetOpacity){
-            gameObject.GetComponent<SpriteRenderer>().color = new Color(1f,1f,1f,0f);
+            _renderer.color = new Color(1f,1f,1f,0f);
             resetOpacity = false;
         }
         
@@ -32,12 +37,13 @@ public class Square : MonoBehaviour
         gameObject.transform.position = new Vector3(x + 0.5f, y + 0.5f, 0f);
         gameObject.transform.parent = parent.transform;
         gameObject.AddComponent<SpriteRenderer>();
-        gameObject.GetComponent<SpriteRenderer>().sprite = sprite;
-        gameObject.GetComponent<SpriteRenderer>().color = new Color(1f,1f,1f,0f);
+        _renderer = GetComponent<SpriteRenderer>();
+        _renderer.sprite = sprite;
+        _renderer.color = new Color(1f,1f,1f,0f);
     }
 
     public void HighLight(){
-        gameObject.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 0.4f);
+        _renderer.color = new Color(1f, 1f, 1f, 0.25f);
         resetOpacity = false;
     }
 }

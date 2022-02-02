@@ -29,6 +29,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 4.546, y: 4.434, z: 0}
   m_LocalScale: {x: 3, y: 3, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -44,10 +45,12 @@ SpriteRenderer:
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -71,7 +74,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: -1916249943148047222, guid: 8e947024b275c044baaa7f00f3a189b6,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -108,8 +111,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3bb70330de75bdd48ae6f4b7ce9329da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsUIElement: 0
   damage: 1
   shotSpeed: 0.15
   shotCoolDown: 1
+  range: 5
+  diceNumber: 1
   shotPrefab: {fileID: 354321063409339651, guid: 05839f353978cae4795a05506b2c325d,
     type: 3}
+  towerSprites:
+  - {fileID: -1916249943148047222, guid: 8e947024b275c044baaa7f00f3a189b6, type: 3}
+  - {fileID: 2594353158001167610, guid: 8e947024b275c044baaa7f00f3a189b6, type: 3}
+  - {fileID: 2811795746289201219, guid: 8e947024b275c044baaa7f00f3a189b6, type: 3}
+  - {fileID: 8722225269655146234, guid: 8e947024b275c044baaa7f00f3a189b6, type: 3}
+  - {fileID: -2216745632537139968, guid: 8e947024b275c044baaa7f00f3a189b6, type: 3}
+  - {fileID: 2293866960016616601, guid: 8e947024b275c044baaa7f00f3a189b6, type: 3}
+  cost: 25

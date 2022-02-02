@@ -1,0 +1,7 @@
+roll dice at start of round (done)
+finish round loader to load from text file
+add 3 unique enemies
+add buff towers
+add basic UI (done)
+add money system (money from rounds, money from kills, tower costs)
+add lives

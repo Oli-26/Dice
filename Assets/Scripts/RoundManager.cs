@@ -22,14 +22,8 @@ public class RoundManager : MonoBehaviour
         Grid = GameObject.FindWithTag("Grid").GetComponent<GridSystem>();
         SetUpRound1();
     }
-
     void FixedUpdate()
     {
-        if(Input.GetKeyDown("s")){
-            roundTick = 0;
-            SpawnsListPosition = 0;
-            roundActive = true;
-        }
         if(roundActive){
             if(SpawnsListPosition < roundSpawns.Count - 1){
                 while(roundTick >= roundSpawns[SpawnsListPosition].getSpawnTime()){
@@ -42,6 +36,16 @@ public class RoundManager : MonoBehaviour
                 roundActive = false;
             }
             roundTick++;
+        }
+    }
+
+    public void StartRound(){
+        roundTick = 0;
+        SpawnsListPosition = 0;
+        roundActive = true;
+
+        foreach(GameObject tower in GetComponent<BuildManager>().placedTowers){
+            tower.GetComponent<Tower>().ReRoll();
         }
     }
 
@@ -79,6 +83,10 @@ public class RoundManager : MonoBehaviour
     public GameObject[] GetAliveUnits(){
         RemoveDeadEnemies();
         return aliveEnemies.Select(x => x.Item2).ToArray();
+    }
+
+    public bool IsRoundActive(){
+        return GetAliveUnits().Length != 0;
     }
 }
 

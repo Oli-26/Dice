@@ -5,19 +5,22 @@ using System;
 
 public class ShockShot : Shot
 {
-    Targeting targeting;
+    Targeting _targeting;
     float range = 1.5f;
     int count = 3;
 
-    void Start(){
-        targeting = GetComponent<Targeting>();
-        targeting.SetTargetingMode(TargetingMode.Closest);
+    void Awake(){
+        base.Awake();
+        _targeting = GetComponent<Targeting>();
     }
 
-    new void FixedUpdate()
+    void Start(){
+        _targeting.SetTargetingMode(TargetingMode.Closest);
+    }
+    void FixedUpdate()
     {
         try{
-            Vector3 distance = Target.transform.position - transform.position;
+            Vector3 distance = Target.transform.position - _transform.position;
 
             if(Vector3.Distance(new Vector3(0,0,0), distance) < 0.15f){
                 Target.GetComponent<Unit>().TakeDamage(Damage);
@@ -28,18 +31,19 @@ public class ShockShot : Shot
                     return;
                 }
                 
-                targeting.Retarget(range);
-                if(targeting.TargetIsSet()){
-                    Target = targeting.GetTarget();
+                _targeting.Retarget(range);
+                if(_targeting.TargetIsSet()){
+                    Target = _targeting.GetTarget();
                 }else{
                     Destroy(gameObject);
                 }
             }
 
             Vector3 unitMovementVector = Vector3.Normalize(distance);
-            transform.position += unitMovementVector * Speed;
+            _transform.position += unitMovementVector * Speed;
 
         }catch(Exception e){
+            Debug.Log(e);
             Destroy(gameObject);
         }
     }

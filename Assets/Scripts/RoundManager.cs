@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System;
 
 public class RoundManager : MonoBehaviour
 {
@@ -20,8 +21,8 @@ public class RoundManager : MonoBehaviour
     void Start()
     {
         Grid = GameObject.FindWithTag("Grid").GetComponent<GridSystem>();
-        SetUpRound1();
     }
+
     void FixedUpdate()
     {
         if(roundActive){
@@ -33,6 +34,7 @@ public class RoundManager : MonoBehaviour
                     }
                 }
             }else{
+                round++;
                 roundActive = false;
             }
             roundTick++;
@@ -43,6 +45,9 @@ public class RoundManager : MonoBehaviour
         roundTick = 0;
         SpawnsListPosition = 0;
         roundActive = true;
+
+        roundSpawns = readRoundFromFile(round);
+        roundSpawns.Sort((a, b) => a.getSpawnTime().CompareTo(b.getSpawnTime()));
 
         foreach(GameObject tower in GetComponent<BuildManager>().placedTowers){
             tower.GetComponent<Tower>().ReRoll();
@@ -61,17 +66,6 @@ public class RoundManager : MonoBehaviour
         Destroy(unit);
     }
 
-    void SetUpRound1(){
-        roundSpawns = new List<EnemySpawn>();
-        for(int i = 0; i < 10; i++){
-            roundSpawns.Add(new EnemySpawn(i*30, unitPrefabs[1]));
-            
-        }
-        roundSpawns.Add(new EnemySpawn(45, unitPrefabs[0]));
-        roundSpawns.Add(new EnemySpawn(75, unitPrefabs[0]));
-        roundSpawns.Sort((a, b) => a.getSpawnTime().CompareTo(b.getSpawnTime()));
-    }
-
     void RemoveDeadEnemies(){
         if(EnemyRecentlyDied){
             List<(bool, GameObject)> tempList =  aliveEnemies.Where(x => x.Item1 == true).ToList();
@@ -87,6 +81,44 @@ public class RoundManager : MonoBehaviour
 
     public bool IsRoundActive(){
         return GetAliveUnits().Length != 0;
+    }
+
+    List<EnemySpawn> readRoundFromFile(int round){
+        try{
+            TextAsset textasset = (TextAsset)Resources.Load("rounds/round" + round.ToString());
+            string text = textasset.text;
+            string[] lines = text.Split('\n');
+
+            
+            List<EnemySpawn> returnList = new List<EnemySpawn>();
+            foreach(string line in lines){
+                string[] values = line.Split(' ');
+                int spawnAtTick = int.Parse(values[0]);
+                GameObject enemyToSpawn = unitPrefabs[int.Parse(values[1])];
+                if(values.Length > 2){
+                    int amount = int.Parse(values[2]);
+                    int spawnSeperator = 1;
+                    if(values.Length > 3){
+                        spawnSeperator = int.Parse(values[3]);
+                    }
+                        for(int i = 0; i < amount; i++){
+                            int addedTickTime = i*spawnSeperator;
+                            EnemySpawn nextSpawn = new EnemySpawn(spawnAtTick+addedTickTime, enemyToSpawn);
+                            returnList.Add(nextSpawn);
+                        }
+                }else{
+                    EnemySpawn nextSpawn = new EnemySpawn(spawnAtTick, enemyToSpawn);
+                    returnList.Add(nextSpawn);
+                }
+            }
+            return returnList;
+            
+        }catch(Exception e){
+            Debug.Log(e);
+            return readRoundFromFile(1);
+        }
+        
+       
     }
 }
 

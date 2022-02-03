@@ -5,6 +5,7 @@ using UnityEngine;
 public abstract class Selectable : MonoBehaviour
 {
     public bool IsUIElement = false;
+    public bool IsActive = true;
     
     void Start()
     {

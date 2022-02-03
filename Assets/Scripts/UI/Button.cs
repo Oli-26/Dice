@@ -18,6 +18,10 @@ public class Button : Selectable
     }
 
     public override void OnClick(){
+        if(!IsActive){
+            return;
+        }
+
         switch(type){
             case ButtonType.BuyTower:
                 BuyTower();
@@ -42,4 +46,5 @@ public class Button : Selectable
        Grid.GetComponent<RoundManager>().StartRound(); 
        Grid.GetComponent<Effects>().Roll();
     }
+
 }

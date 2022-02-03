@@ -7,7 +7,6 @@ public class Square : MonoBehaviour
     public int x;
     public int y;
     public GameObject squareGameObject;
-    bool resetOpacity = true;
     SpriteRenderer _renderer;
 
     void Awake(){
@@ -21,13 +20,6 @@ public class Square : MonoBehaviour
 
     void FixedUpdate()
     {
-        if(resetOpacity){
-            _renderer.color = new Color(1f,1f,1f,0f);
-            resetOpacity = false;
-        }
-        
-        resetOpacity = true;
-
     }
 
     public void Initialise(int x, int y, GameObject parent, Sprite sprite){
@@ -40,10 +32,5 @@ public class Square : MonoBehaviour
         _renderer = GetComponent<SpriteRenderer>();
         _renderer.sprite = sprite;
         _renderer.color = new Color(1f,1f,1f,0f);
-    }
-
-    public void HighLight(){
-        _renderer.color = new Color(1f, 1f, 1f, 0.25f);
-        resetOpacity = false;
     }
 }

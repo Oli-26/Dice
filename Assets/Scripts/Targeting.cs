@@ -1,16 +1,25 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-public enum TargetingMode {First, Strong, Weak, Last, Closest};
+using System.Linq;
+
+public enum TargetingMode {First, Strong, Weak, Last, Closest, ClosestNew};
 public class Targeting : MonoBehaviour
 {
     protected TargetingMode Mode = TargetingMode.First;
     GameObject Target;
     bool TargetSet = false;
     RoundManager Manager;
+    List<GameObject> alreadyTargeted;
+
+    void Awake(){
+        alreadyTargeted = new List<GameObject>();
+    }
+
     void Start()
     {
         Manager = GameObject.FindWithTag("Grid").GetComponent<RoundManager>();
+
     }
 
     public GameObject GetTarget(){
@@ -29,6 +38,12 @@ public class Targeting : MonoBehaviour
         Mode = m;
     }
 
+    public void SetTarget(GameObject target){
+        Target = target;
+        alreadyTargeted.Add(target);
+        TargetSet = true;
+    }
+
     public virtual void Retarget(float range){
           switch(Mode){
                 case TargetingMode.First:
@@ -44,7 +59,10 @@ public class Targeting : MonoBehaviour
                     TargetLast(range);
                     break;
                 case TargetingMode.Closest:
-                    TargetClosest(range);
+                    TargetClosest(range, Target);
+                    break;
+                case TargetingMode.ClosestNew:
+                    TargetClosestNew(range);
                     break;
                 default:
                     TargetFirst(range);
@@ -52,19 +70,36 @@ public class Targeting : MonoBehaviour
           }
     }
 
-    protected virtual void TargetClosest(float range){
+    protected virtual void TargetClosestNew(float range){
+        GameObject[] enemies = Manager.GetComponent<RoundManager>().GetAliveUnits();
+        float leastDistance = range + 1f;
+        TargetSet = false;
+        GameObject[] unTargetedEnemies = enemies.Where(e => !alreadyTargeted.Any(e2 => e == e2)).ToArray();
+
+        for(int i = 0; i < unTargetedEnemies.Length; i++){
+            Unit enemy = unTargetedEnemies[i].GetComponent<Unit>();
+            if(Vector3.Distance(unTargetedEnemies[i].transform.position, transform.position) < range && !enemy.IsOverKilled()){
+                float distance = Vector3.Distance(unTargetedEnemies[i].transform.position, transform.position);
+                if(distance < leastDistance){
+                    SetTarget(unTargetedEnemies[i]);
+                    leastDistance = distance;
+                }
+            }
+        }  
+    }
+
+    protected virtual void TargetClosest(float range, GameObject previousTarget = null){
         GameObject[] enemies = Manager.GetComponent<RoundManager>().GetAliveUnits();
         float leastDistance = range + 1f;
         TargetSet = false;
 
         for(int i = 0; i < enemies.Length; i++){
             Unit enemy = enemies[i].GetComponent<Unit>();
-            if(Vector3.Distance(enemies[i].transform.position, transform.position) < range && !enemy.IsOverKilled()){
+            if(previousTarget != enemies[i] && Vector3.Distance(enemies[i].transform.position, transform.position) < range && !enemy.IsOverKilled()){
                 float distance = Vector3.Distance(enemies[i].transform.position, transform.position);
                 if(distance < leastDistance){
-                    Target = enemies[i];
+                    SetTarget(enemies[i]);
                     leastDistance = distance;
-                    TargetSet = true;
                 }
             }
         }  
@@ -80,9 +115,8 @@ public class Targeting : MonoBehaviour
             if(Vector3.Distance(enemies[i].transform.position, transform.position) < range && !enemy.IsOverKilled()){
                 float lengthTraveled = enemies[i].GetComponent<Unit>().GetDistanceTraveled();
                 if(lengthTraveled > maxDistanceTraveled){
-                    Target = enemies[i];
+                    SetTarget(enemies[i]);
                     maxDistanceTraveled = lengthTraveled;
-                    TargetSet = true;
                 }
             }
         }   
@@ -100,10 +134,9 @@ public class Targeting : MonoBehaviour
                 float enemyTier = enemies[i].GetComponent<Unit>().Tier;
                 float lengthTraveled = enemies[i].GetComponent<Unit>().GetDistanceTraveled();
                 if(enemyTier > highestTier && maxDistanceTraveled < lengthTraveled){
-                    Target = enemies[i];
+                    SetTarget(enemies[i]);
                     highestTier = enemyTier;
                     maxDistanceTraveled = lengthTraveled;
-                    TargetSet = true;
                 }
             }
         }  
@@ -121,10 +154,9 @@ public class Targeting : MonoBehaviour
                 float enemyTier = enemies[i].GetComponent<Unit>().Tier;
                 float lengthTraveled = enemies[i].GetComponent<Unit>().GetDistanceTraveled();
                 if(enemyTier < lowestTier && maxDistanceTraveled < lengthTraveled){
-                    Target = enemies[i];
+                    SetTarget(enemies[i]);
                     lowestTier = enemyTier;
                     maxDistanceTraveled = lengthTraveled;
-                    TargetSet = true;
                 }
             }
         }  
@@ -140,9 +172,8 @@ public class Targeting : MonoBehaviour
             if(Vector3.Distance(enemies[i].transform.position, transform.position) < range && !enemy.IsOverKilled()){
                 float lengthTraveled = enemies[i].GetComponent<Unit>().GetDistanceTraveled();
                 if(lengthTraveled < leastDistanceTraveled){
-                    Target = enemies[i];
+                    SetTarget(enemies[i]);
                     leastDistanceTraveled = lengthTraveled;
-                    TargetSet = true;
                 }
             }
         }   

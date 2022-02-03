@@ -1054,6 +1054,153 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: six sided die_39
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 32
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6062ca7c93a027b4d90f7b903f34ceb3
+      internalID: 1538477293
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: six sided die_40
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 16
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ed45883a1c8e76e40b607107a5949ef6
+      internalID: 98257461
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: six sided die_41
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 95
+        width: 16
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5b0b552497215a64984cf3c00fae23db
+      internalID: 1718370141
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: six sided die_42
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 96
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 24031fa10e2231b479103bf6bf5837c1
+      internalID: 1498948058
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: six sided die_43
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 96
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f0113448fa0812a4aa6aa0270f921f9b
+      internalID: -1679345234
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: six sided die_44
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 96
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d919ff8ac545fb64d8460d490dd734f3
+      internalID: 721919788
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: six sided die_45
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 96
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 39c58633719ccdd49bc82021dc637645
+      internalID: -1067137208
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -1065,45 +1212,52 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      six sided die_2: 2811795746289201219
+      six sided die_31: 3011759226786817901
       six sided die_15: -4993754036354502506
       six sided die_6: 2265331011791246218
-      six sided die_24: -3433763934723486138
-      six sided die_5: 2293866960016616601
+      six sided die_40: 98257461
       six sided die_26: -872934857620958978
-      six sided die_38: 1287704838
       six sided die_23: 1879731190769728224
       six sided die_33: -1311858113952710574
-      six sided die_21: 1936747134579881048
-      six sided die_34: -5049627267753626238
-      six sided die_31: 3011759226786817901
+      six sided die_41: 1718370141
       six sided die_19: 5607947580626180153
-      six sided die_27: -4505731324687449576
-      six sided die_0: -1916249943148047222
       six sided die_8: 4310509366386185502
       six sided die_14: -8487625778138932996
       six sided die_12: -3529540655588834627
-      six sided die_13: -3480870730223333266
-      six sided die_4: -2216745632537139968
       six sided die_1: 2594353158001167610
-      six sided die_7: -5322769234351264586
-      six sided die_22: -8501897796974355982
       six sided die_18: 3684383039407594442
-      six sided die_28: -7034040177366338742
-      six sided die_30: -8970995999231441903
       six sided die_10: 3175830135063442927
       six sided die_17: 8313519941757898937
-      six sided die_11: -459727722732607761
+      six sided die_25: 3819739716822585301
       six sided die_37: 1062539749
       six sided die_9: -3602023821403072769
-      six sided die_25: 3819739716822585301
-      six sided die_36: -8987816
-      six sided die_20: 9075837434100791523
-      six sided die_29: -9013818417295234803
+      six sided die_44: 721919788
       six sided die_3: 8722225269655146234
       six sided die_32: -2597292674569120533
-      six sided die_16: 9106701863874337162
       six sided die_35: -6822352418103033667
+      six sided die_2: 2811795746289201219
+      six sided die_24: -3433763934723486138
+      six sided die_5: 2293866960016616601
+      six sided die_38: 1287704838
+      six sided die_34: -5049627267753626238
+      six sided die_21: 1936747134579881048
+      six sided die_39: 1538477293
+      six sided die_27: -4505731324687449576
+      six sided die_0: -1916249943148047222
+      six sided die_13: -3480870730223333266
+      six sided die_45: -1067137208
+      six sided die_4: -2216745632537139968
+      six sided die_7: -5322769234351264586
+      six sided die_22: -8501897796974355982
+      six sided die_42: 1498948058
+      six sided die_28: -7034040177366338742
+      six sided die_30: -8970995999231441903
+      six sided die_43: -1679345234
+      six sided die_11: -459727722732607761
+      six sided die_29: -9013818417295234803
+      six sided die_36: -8987816
+      six sided die_20: 9075837434100791523
+      six sided die_16: 9106701863874337162
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

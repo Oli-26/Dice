@@ -12,7 +12,6 @@ public class Effects : MonoBehaviour
     public SpriteRenderer rollEffectRenderer;
     int rollFrame = 0;
     int frameTime = 0;
-
     void Start()
     {
         rollEffectRenderer = rollEffect.GetComponent<SpriteRenderer>();

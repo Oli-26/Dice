@@ -4,42 +4,46 @@ using UnityEngine;
 
 public class Unit : MonoBehaviour
 {
-    Transform _transform;
+    protected Transform _transform;
     public int PathPosition = 1;
     Vector3 TargetPosition;
     GridSystem Grid;
     RoundManager Manager;
+    ItemSpawner Spawner;
     bool Moving = true;
     public float health = 1f;
     public int worth = 1;
     public float distanceTraveled = 0;
     public int Tier = 1;
     public float speed = 0.035f;
+    public bool isShielded = false;
     float incomingDamage = 0f;
-    void Awake(){
+    protected void Awake(){
         _transform = transform;
     }
 
-    void Start()
+    protected void Start()
     {
-        Grid = GameObject.FindWithTag("Grid").GetComponent<GridSystem>();
-        Manager = GameObject.FindWithTag("Grid").GetComponent<RoundManager>();
+        GameObject grid = GameObject.FindWithTag("Grid");
+        Grid = grid.GetComponent<GridSystem>();
+        Manager = grid.GetComponent<RoundManager>();
+        Spawner = grid.GetComponent<ItemSpawner>();
         TargetPosition = Grid.GetNthSquareOnPath(PathPosition);
     }
 
-    void FixedUpdate()
+    protected void FixedUpdate()
     {
         if(Moving){
             Move();
         } 
     }
 
-    void Move(){
+    protected void Move(){
         FindNextPathPoint();
         MoveTowardsNextPathPoint();
     }
 
-    void MoveTowardsNextPathPoint(){
+    protected void MoveTowardsNextPathPoint(){
         Vector3 unitMovementVector = Vector3.Normalize(TargetPosition - _transform.position);
         Vector3 changeVector = unitMovementVector * speed;
         _transform.position += changeVector;
@@ -50,7 +54,7 @@ public class Unit : MonoBehaviour
         return distanceTraveled;
     }
     
-    void FindNextPathPoint(){
+    protected void FindNextPathPoint(){
         if(Vector3.Distance(_transform.position, TargetPosition) < 0.1f){
             if(Grid.GetAmountOfPoints() <= PathPosition + 1){
                 Moving = false;
@@ -68,15 +72,17 @@ public class Unit : MonoBehaviour
     }
 
     public void TakeDamage(float damage){
-        health -= damage;
-        incomingDamage -= damage;
+        health -= ShieldReduction(damage);
+        incomingDamage -= ShieldReduction(damage);
+
         if(health <= 0){
+            Spawner.SpawnCoinAt(_transform.position, worth);
             Manager.KillUnit(gameObject);
         }
     }
 
     public void TargetedForDamage(float damage){
-        incomingDamage += damage;      
+        incomingDamage += ShieldReduction(damage);      
     }
 
     public bool IsOverKilled(){
@@ -85,5 +91,28 @@ public class Unit : MonoBehaviour
         }
         
         return false;
+    }
+
+    float ShieldReduction(float damage){
+        if(isShielded){
+            return damage * 0.75f;
+        }
+        return damage;
+    }
+
+    public void Shield(){
+        _transform.GetChild(0).gameObject.SetActive(true);
+        incomingDamage = 0.75f * incomingDamage;
+        isShielded = true;
+    }
+
+    public void RemoveShield(){
+        _transform.GetChild(0).gameObject.SetActive(false);
+        incomingDamage = 1.33f * incomingDamage;
+        isShielded = false;
+
+    }
+    public bool IsShielded(){
+        return isShielded;
     }
 }

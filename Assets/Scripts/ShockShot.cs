@@ -9,21 +9,29 @@ public class ShockShot : Shot
     float range = 1.5f;
     int count = 3;
 
-    void Awake(){
+    new void Awake(){
         base.Awake();
         _targeting = GetComponent<Targeting>();
     }
 
     void Start(){
-        _targeting.SetTargetingMode(TargetingMode.Closest);
+        _targeting.SetTargetingMode(TargetingMode.ClosestNew);
     }
-    void FixedUpdate()
+
+    public override void Init(GameObject target, float damage, float speed){
+        base.Init(target, damage, speed);
+        _targeting.SetTarget(target);
+    }
+
+    new void FixedUpdate()
     {
         try{
             Vector3 distance = Target.transform.position - _transform.position;
 
             if(Vector3.Distance(new Vector3(0,0,0), distance) < 0.15f){
-                Target.GetComponent<Unit>().TakeDamage(Damage);
+                Unit unit = Target.GetComponent<Unit>();
+                unit.RemoveShield();
+                unit.TakeDamage(Damage);
                 count--;
 
                 if(count <= 0){

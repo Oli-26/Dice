@@ -7,17 +7,19 @@ public class BuildManager : MonoBehaviour
     GameObject towerBeingPlaced;
     Transform towerBeingPlacedTransform;
     bool placementActive = false;
+    bool guardAgainstInstantPlacement = false;
 
     public GameObject[] towers;
 
     public List<GameObject> placedTowers;
-
-    int moneyTEMP = 10000;
-
     MouseTracker tracker;
+    GridSystem grid;
+    MoneyManager moneyManager;
 
     void Awake(){
         tracker = GetComponent<MouseTracker>();
+        grid = GetComponent<GridSystem>();
+        moneyManager = GetComponent<MoneyManager>();
     }
 
     void Start()
@@ -29,13 +31,19 @@ public class BuildManager : MonoBehaviour
     void Update()
     {
         if(placementActive){
-            towerBeingPlacedTransform.position = tracker.GetMousePosition();
+            towerBeingPlacedTransform.position = SnapToGrid(tracker.GetMousePosition());
+            if(Input.GetMouseButtonDown(0) && !guardAgainstInstantPlacement){
+                placementActive = false;
+                guardAgainstInstantPlacement = true;
+                placedTowers.Add(towerBeingPlaced);
+                tracker.AddSelectableObject(towerBeingPlaced);
+            }
+
+            if(guardAgainstInstantPlacement){
+                guardAgainstInstantPlacement = false;
+            }
         }
 
-        if(placementActive && Input.GetMouseButtonDown(0)){
-            placementActive = false;
-            placedTowers.Add(towerBeingPlaced);
-        }
     }
 
     public void CreateTower(){
@@ -44,10 +52,17 @@ public class BuildManager : MonoBehaviour
 
     public void PurchaseTower(int id){
         GameObject tempTower = towers[id];
-        if(tempTower.GetComponent<Tower>().cost < moneyTEMP){
+        int cost = tempTower.GetComponent<Tower>().cost;
+        if(moneyManager.CheckFunds(cost)){
             towerBeingPlaced = Instantiate(tempTower, GetComponent<MouseTracker>().GetMousePosition(), Quaternion.identity);
             towerBeingPlacedTransform = towerBeingPlaced.transform;
             placementActive = true;
+            guardAgainstInstantPlacement= true;
+            moneyManager.SpendMoney(cost);
         }
+    }
+
+    public Vector3 SnapToGrid(Vector3 pos){
+        return grid.SnapToGrid(pos);
     }
 }

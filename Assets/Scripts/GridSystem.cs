@@ -51,13 +51,7 @@ public class GridSystem : MonoBehaviour
         return path[n].transform.position;
     }
 
-    public void HighLightGridPosition(Vector3 position){
-        if(position.x > 0 && position.x < 16 && position.y > 0 && position.y < 10){
-            int xPos = (int)Mathf.Ceil(position.x) - 1;
-            int yPos = (int)Mathf.Ceil(position.y) - 1;
-            grid[xPos, yPos].GetComponent<Square>().HighLight();
-        }
+    public Vector3 SnapToGrid(Vector3 position){
+        return new Vector3(Mathf.Ceil(position.x) - 0.5f, Mathf.Ceil(position.y) - 0.5f, 0f);
     }
-
-
 }

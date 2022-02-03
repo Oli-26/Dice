@@ -35,11 +35,12 @@ public class Shot : MonoBehaviour
             _transform.position += unitMovementVector * Speed;
 
         }catch(Exception e){
+            Debug.Log(e);
             Destroy(gameObject);
         }
     }
 
-    public void Init(GameObject target, float damage, float speed){
+    public virtual void Init(GameObject target, float damage, float speed){
         Target = target;
         Damage = damage;
         Speed = speed;

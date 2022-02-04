@@ -17,17 +17,19 @@ public class Unit : MonoBehaviour
     public int Tier = 1;
     public float speed = 0.035f;
     public bool isShielded = false;
-    float incomingDamage = 0f;
+    public float incomingDamage = 0f;
+    int slow = 0;
+
     protected void Awake(){
         _transform = transform;
-    }
-
-    protected void Start()
-    {
         GameObject grid = GameObject.FindWithTag("Grid");
         Grid = grid.GetComponent<GridSystem>();
         Manager = grid.GetComponent<RoundManager>();
         Spawner = grid.GetComponent<ItemSpawner>();
+    }
+
+    protected void Start()
+    {
         TargetPosition = Grid.GetNthSquareOnPath(PathPosition);
     }
 
@@ -35,6 +37,10 @@ public class Unit : MonoBehaviour
     {
         if(Moving){
             Move();
+            if(slow > 0){
+                slow--;
+            }
+            
         } 
     }
 
@@ -43,9 +49,14 @@ public class Unit : MonoBehaviour
         MoveTowardsNextPathPoint();
     }
 
+    public void SetPathPoint(int point){
+        PathPosition = point;
+        TargetPosition = Grid.GetNthSquareOnPath(PathPosition);
+    }
+
     protected void MoveTowardsNextPathPoint(){
         Vector3 unitMovementVector = Vector3.Normalize(TargetPosition - _transform.position);
-        Vector3 changeVector = unitMovementVector * speed;
+        Vector3 changeVector = unitMovementVector * speed * (1f - slow * 0.001f);
         _transform.position += changeVector;
         distanceTraveled += Vector3.Distance(new Vector3(0f, 0f, 0f), changeVector);
     }
@@ -76,9 +87,13 @@ public class Unit : MonoBehaviour
         incomingDamage -= ShieldReduction(damage);
 
         if(health <= 0){
-            Spawner.SpawnCoinAt(_transform.position, worth);
-            Manager.KillUnit(gameObject);
+            Die();
         }
+    }
+
+    protected virtual void Die(){
+        Spawner.SpawnCoinAt(_transform.position, worth);
+        Manager.KillUnit(gameObject);
     }
 
     public void TargetedForDamage(float damage){
@@ -86,33 +101,40 @@ public class Unit : MonoBehaviour
     }
 
     public bool IsOverKilled(){
-        if(incomingDamage >= health){
+        if(incomingDamage >= health + 0.1f){
             return true;
         }
         
         return false;
     }
 
-    float ShieldReduction(float damage){
+    protected float ShieldReduction(float damage){
         if(isShielded){
-            return damage * 0.75f;
+            return damage * 0.6f;
         }
         return damage;
     }
 
     public void Shield(){
         _transform.GetChild(0).gameObject.SetActive(true);
-        incomingDamage = 0.75f * incomingDamage;
+        incomingDamage = 0.6f * incomingDamage;
         isShielded = true;
     }
 
     public void RemoveShield(){
         _transform.GetChild(0).gameObject.SetActive(false);
-        incomingDamage = 1.33f * incomingDamage;
+        incomingDamage =  incomingDamage/0.6f;
         isShielded = false;
 
     }
     public bool IsShielded(){
         return isShielded;
+    }
+
+    public void Slow(int amount){
+        if(slow < 400){
+            slow+=amount;
+        }
+        
     }
 }

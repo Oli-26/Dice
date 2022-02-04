@@ -33,10 +33,7 @@ public class BuildManager : MonoBehaviour
         if(placementActive){
             towerBeingPlacedTransform.position = SnapToGrid(tracker.GetMousePosition());
             if(Input.GetMouseButtonDown(0) && !guardAgainstInstantPlacement){
-                placementActive = false;
-                guardAgainstInstantPlacement = true;
-                placedTowers.Add(towerBeingPlaced);
-                tracker.AddSelectableObject(towerBeingPlaced);
+                PlaceTower();
             }
 
             if(guardAgainstInstantPlacement){
@@ -44,6 +41,14 @@ public class BuildManager : MonoBehaviour
             }
         }
 
+    }
+
+    public void PlaceTower(){
+        placementActive = false;
+        guardAgainstInstantPlacement = true;
+        placedTowers.Add(towerBeingPlaced);
+        tracker.AddSelectableObject(towerBeingPlaced);
+        towerBeingPlaced.GetComponent<Tower>().HideRange();
     }
 
     public void CreateTower(){

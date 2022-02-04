@@ -6,6 +6,7 @@ public class Button : Selectable
 {
     public ButtonType type;
     public int value = 0;
+    public GameObject attatchedTo;
     public GameObject Grid;
     void Start()
     {
@@ -29,6 +30,9 @@ public class Button : Selectable
             case ButtonType.StartRound:
                 StartRound();
                 break;
+            case ButtonType.TowerPower:
+                UsePower();
+                break;
             default:
                 break;
         }   
@@ -44,7 +48,16 @@ public class Button : Selectable
 
     void StartRound(){
        Grid.GetComponent<RoundManager>().StartRound(); 
-       Grid.GetComponent<Effects>().Roll();
+    }
+
+    void UsePower(){
+        if(attatchedTo.GetComponent<Tower>() != null){
+            attatchedTo.GetComponent<Tower>().UsePower();
+        }
+    }
+
+    public void Attatch(GameObject attatch){
+        attatchedTo = attatch;
     }
 
 }

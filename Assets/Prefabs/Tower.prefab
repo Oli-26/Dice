@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 731630653306634101}
   m_Layer: 0
   m_Name: Tower
-  m_TagString: Untagged
+  m_TagString: Tower
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -76,7 +76,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: 1538477293, guid: 8e947024b275c044baaa7f00f3a189b6, type: 3}
+  m_Sprite: {fileID: -2134679728, guid: ea3b1ec880b8c5f488802edfedbd77be, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -113,7 +113,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsUIElement: 0
   IsActive: 1
-  damage: 1
+  damage: 1.11
   shotSpeed: 0.15
   shotCoolDown: 1.5
   range: 2.5

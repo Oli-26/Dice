@@ -60,7 +60,8 @@ public class UIManager : MonoBehaviour
         }
     }
     
-    public void UpdateSelectedMenu(Sprite towerSprite){
+    public void UpdateSelectedMenu(GameObject tower, Sprite towerSprite){
+        GameObject.Find("UsePower").GetComponent<Button>().Attatch(tower);
         selectedMenu.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = towerSprite;
     }
 

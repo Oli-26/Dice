@@ -1,3 +1,3 @@
 
 
-public enum ButtonType{BuyTower, StartRound, MoveMenuTest}
+public enum ButtonType{BuyTower, StartRound, TowerPower}

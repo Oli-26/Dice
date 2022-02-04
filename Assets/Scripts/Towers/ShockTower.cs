@@ -14,14 +14,14 @@ public class ShockTower : Tower
         base.FixedUpdate();
     }
 
-    protected new void Attack(){
+    protected override void Attack(){
         _targeting.Retarget(range);
 
         if(_targeting.TargetIsSet()){
             nextShot = shotCoolDown;
             _targeting.GetTarget().GetComponent<Unit>().TargetedForDamage(damage);
             ShockShot shot = Instantiate(shotPrefab, transform.position, Quaternion.identity).GetComponent<ShockShot>();
-            shot.Init(_targeting.GetTarget(), damage, shotSpeed);
+            shot.Init(_targeting.GetTarget(), damage, shotSpeed, diceNumber);
         }
     }
 }

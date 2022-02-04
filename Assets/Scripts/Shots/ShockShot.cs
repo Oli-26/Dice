@@ -7,7 +7,7 @@ public class ShockShot : Shot
 {
     Targeting _targeting;
     float range = 1.5f;
-    int count = 3;
+    int count = 1;
 
     new void Awake(){
         base.Awake();
@@ -18,7 +18,8 @@ public class ShockShot : Shot
         _targeting.SetTargetingMode(TargetingMode.ClosestNew);
     }
 
-    public override void Init(GameObject target, float damage, float speed){
+    public new void Init(GameObject target, float damage, float speed, int bounceCount){
+        this.count = bounceCount;
         base.Init(target, damage, speed);
         _targeting.SetTarget(target);
     }

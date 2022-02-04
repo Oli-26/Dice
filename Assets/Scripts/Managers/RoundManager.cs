@@ -18,9 +18,14 @@ public class RoundManager : MonoBehaviour
     int SpawnsListPosition = 0;
     bool EnemyRecentlyDied = false;
 
+    MoneyManager _moneyManager;
+
+    void Awake(){
+        _moneyManager = GetComponent<MoneyManager>();
+    }
     void Start()
     {
-        Grid = GameObject.FindWithTag("Grid").GetComponent<GridSystem>();
+        Grid = GetComponent<GridSystem>();
     }
 
     void FixedUpdate()
@@ -34,8 +39,12 @@ public class RoundManager : MonoBehaviour
                     }
                 }
             }else{
-                round++;
-                roundActive = false;
+                if(aliveEnemies.Count == 0){
+                    _moneyManager.GainMoney(10 + round * 5);
+                    round++;
+                    roundActive = false;
+                }
+                
             }
             roundTick++;
         }
@@ -57,6 +66,13 @@ public class RoundManager : MonoBehaviour
     void SpawnUnit(){
         aliveEnemies.Add((true, Instantiate(roundSpawns[SpawnsListPosition].getUnit(), Grid.GetNthSquareOnPath(0), Quaternion.identity)));
         SpawnsListPosition++;
+    }
+
+    public void SpawnUnitAt(Vector3 position, int unitId, int targetPositionIndex, float distanceTraveled){
+        GameObject unit = Instantiate(unitPrefabs[unitId], position, Quaternion.identity);
+        aliveEnemies.Add((true, unit));
+        unit.GetComponent<Unit>().SetPathPoint(targetPositionIndex);
+        unit.GetComponent<Unit>().distanceTraveled = distanceTraveled;
     }
 
     public void KillUnit(GameObject unit){

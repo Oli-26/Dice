@@ -99,7 +99,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PathPosition: 0
-  health: 2
+  health: 1
   worth: 1
   distanceTraveled: 0
   Tier: 1

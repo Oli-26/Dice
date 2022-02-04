@@ -12,6 +12,9 @@ public class MouseTracker : MonoBehaviour
     UIManager UIManager;
     GameObject selectedObject;
 
+    public GameObject towerUsingPower;
+    public bool buffActive = false;
+
     void Awake(){
         mainCamera = Camera.main;
         gridSystem = GetComponent<GridSystem>();
@@ -62,7 +65,6 @@ public class MouseTracker : MonoBehaviour
             }
         }
         UIManager.CloseSelectedMenu();
-
     }
 
     bool InRectangle(Vector3 objectPos, float halfWidth, float halfHeight){

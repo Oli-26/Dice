@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Tower : Selectable
 {
+    protected bool peaceful;
     public float damage = 1f;
     public float shotSpeed = 0.1f;
     protected float nextShot = 0;
@@ -13,11 +14,12 @@ public class Tower : Selectable
     public GameObject shotPrefab;
     public Sprite[] towerSprites;
     public Sprite defaultSprite;
-
+    protected bool buffed = false;
     public int cost = 25;
     protected SpriteRenderer _renderer;
     protected Targeting _targeting;
     protected RoundManager _roundManager;
+    protected Effects _effects;
 
     protected Transform _transform;
 
@@ -25,6 +27,7 @@ public class Tower : Selectable
         _renderer = GetComponent<SpriteRenderer>();
         _targeting = GetComponent<Targeting>();
         _roundManager = GameObject.FindWithTag("Grid").GetComponent<RoundManager>();
+        _effects = GameObject.FindWithTag("Grid").GetComponent<Effects>();
         _transform = transform;
     }
     protected void Start()
@@ -34,18 +37,18 @@ public class Tower : Selectable
 
     protected void FixedUpdate()
     {
-        if(nextShot < 0 && _roundManager.IsRoundActive()){
+        if(!peaceful && nextShot < 0 && _roundManager.IsRoundActive()){
             Attack();
         }else{
             nextShot -= Time.deltaTime;
         }
     }
 
-    protected void Attack(){
+    protected virtual void Attack(){
         _targeting.Retarget(range);
 
         if(_targeting.TargetIsSet()){
-            nextShot = shotCoolDown;
+            nextShot = shotCoolDown * (1f * Mathf.Pow(0.85f, diceNumber));
             _targeting.GetTarget().GetComponent<Unit>().TargetedForDamage(damage);
             Shot shot = Instantiate(shotPrefab, transform.position, Quaternion.identity).GetComponent<Shot>();
             shot.Init(_targeting.GetTarget(), damage, shotSpeed);
@@ -55,12 +58,38 @@ public class Tower : Selectable
     public void ReRoll(){
         int random = Random.Range(0, 5);
         diceNumber = random + 1;
-        _renderer.sprite = towerSprites[random];
+        UpdateNumberSprite();
+        _effects.RollAt(_transform.position);
+        buffed = false;
+    }
+
+    public bool isBuffed(){
+        return buffed;
+    }
+
+    public bool Buff(){
+        if(buffed || diceNumber == 6){
+            return false;
+        }
+
+        diceNumber = diceNumber + 1;
+        buffed = true;
+        UpdateNumberSprite();
+        _effects.RollAt(_transform.position);
+        return true;
+    }
+
+    protected void UpdateNumberSprite(){
+        if(diceNumber == 0){
+            _renderer.sprite = defaultSprite;
+            return;
+        }
+        _renderer.sprite = towerSprites[diceNumber-1];
     }
 
     public override void OnClick(){
         GameObject.FindWithTag("Grid").GetComponent<UIManager>().OpenSelectedMenu();
-        GameObject.FindWithTag("Grid").GetComponent<UIManager>().UpdateSelectedMenu(defaultSprite);
+        GameObject.FindWithTag("Grid").GetComponent<UIManager>().UpdateSelectedMenu(gameObject, defaultSprite);
         ShowRange();
     }
 
@@ -69,6 +98,15 @@ public class Tower : Selectable
     }
 
     public void HideRange(){
-        _transform.GetChild(0).gameObject.SetActive(false);
+        _transform.
+        GetChild(0).gameObject.SetActive(false);
+    }
+
+    public virtual void UsePower(){
+
+    }
+
+    public virtual void DePower(){
+
     }
 }

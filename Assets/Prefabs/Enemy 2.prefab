@@ -184,9 +184,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PathPosition: 1
-  health: 5
+  health: 8
   worth: 10
   distanceTraveled: 0
   Tier: 3
-  speed: 0.035
+  speed: 0.03
   isShielded: 0

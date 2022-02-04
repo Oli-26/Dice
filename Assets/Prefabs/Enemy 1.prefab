@@ -95,7 +95,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9045189624377877030}
   - component: {fileID: 9045189624377877031}
-  - component: {fileID: 9045189624377877028}
+  - component: {fileID: 7530217826875402815}
   m_Layer: 0
   m_Name: Enemy 1
   m_TagString: Unit
@@ -171,7 +171,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &9045189624377877028
+--- !u!114 &7530217826875402815
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -180,13 +180,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 9045189624377877029}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b4e9859faea062746a407d886616bdc8, type: 3}
+  m_Script: {fileID: 11500000, guid: f4ef4097184255c4bb2215fab60302ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PathPosition: 0
-  health: 4
-  worth: 3
+  PathPosition: 1
+  health: 2
+  worth: 2
   distanceTraveled: 0
   Tier: 2
-  speed: 0.035
+  speed: 0.03
   isShielded: 0

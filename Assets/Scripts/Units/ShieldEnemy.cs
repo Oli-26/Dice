@@ -6,7 +6,7 @@ public class ShieldEnemy : Unit
 {
 
     float shieldingCooldown = 1f;
-    int numberToShield = 3;
+    int numberToShield = 5;
     float range = 2.5f;
     
     new void Awake(){
@@ -24,7 +24,7 @@ public class ShieldEnemy : Unit
 
         if(shieldingCooldown <= 0){
             ShieldAllies();
-            shieldingCooldown = 5f;
+            shieldingCooldown = 4f;
         }else{
             shieldingCooldown -= Time.deltaTime;
         }

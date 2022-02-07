@@ -20,19 +20,20 @@ public class Tower : Selectable
     protected Targeting _targeting;
     protected RoundManager _roundManager;
     protected Effects _effects;
-
     protected Transform _transform;
 
     void Awake(){
         _renderer = GetComponent<SpriteRenderer>();
         _targeting = GetComponent<Targeting>();
-        _roundManager = GameObject.FindWithTag("Grid").GetComponent<RoundManager>();
-        _effects = GameObject.FindWithTag("Grid").GetComponent<Effects>();
+        GameObject grid = GameObject.FindWithTag("Grid");
+        _roundManager = grid.GetComponent<RoundManager>();
+        _effects = grid.GetComponent<Effects>();
         _transform = transform;
     }
+    
     protected void Start()
     {
-        _transform.GetChild(0).localScale = new Vector3(range*0.67f, range*0.67f, 1f);
+        GetRangeIndicator().localScale = new Vector3(range*0.67f, range*0.67f, 1f);
     }
 
     protected void FixedUpdate()
@@ -94,12 +95,11 @@ public class Tower : Selectable
     }
 
     protected void ShowRange(){
-        _transform.GetChild(0).gameObject.SetActive(true);
+        GetRangeIndicator().gameObject.SetActive(true);
     }
 
     public void HideRange(){
-        _transform.
-        GetChild(0).gameObject.SetActive(false);
+        GetRangeIndicator().gameObject.SetActive(false);
     }
 
     public virtual void UsePower(){
@@ -108,5 +108,9 @@ public class Tower : Selectable
 
     public virtual void DePower(){
 
+    }
+
+    private void GetRangeIndicator(){
+        return _transform.GetChild(0);
     }
 }

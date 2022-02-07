@@ -116,17 +116,21 @@ public class Unit : MonoBehaviour
     }
 
     public void Shield(){
-        _transform.GetChild(0).gameObject.SetActive(true);
+        GetShieldObject().SetActive(true);
         incomingDamage = 0.6f * incomingDamage;
         isShielded = true;
     }
 
     public void RemoveShield(){
-        _transform.GetChild(0).gameObject.SetActive(false);
+        GetShieldObject().SetActive(false);
         incomingDamage =  incomingDamage/0.6f;
         isShielded = false;
-
     }
+
+    private GameObject GetShieldObject(){
+        return _transform.GetChild(0).gameObject;
+    }
+
     public bool IsShielded(){
         return isShielded;
     }

@@ -8,9 +8,7 @@ public class BuildManager : MonoBehaviour
     Transform towerBeingPlacedTransform;
     bool placementActive = false;
     bool guardAgainstInstantPlacement = false;
-
     public GameObject[] towers;
-
     public List<GameObject> placedTowers;
     MouseTracker tracker;
     GridSystem grid;
@@ -26,7 +24,6 @@ public class BuildManager : MonoBehaviour
     {
         placedTowers = new List<GameObject>();
     }
-
     
     void Update()
     {
@@ -40,7 +37,6 @@ public class BuildManager : MonoBehaviour
                 guardAgainstInstantPlacement = false;
             }
         }
-
     }
 
     public void PlaceTower(){
@@ -49,10 +45,6 @@ public class BuildManager : MonoBehaviour
         placedTowers.Add(towerBeingPlaced);
         tracker.AddSelectableObject(towerBeingPlaced);
         towerBeingPlaced.GetComponent<Tower>().HideRange();
-    }
-
-    public void CreateTower(){
-
     }
 
     public void PurchaseTower(int id){

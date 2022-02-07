@@ -49,203 +49,102 @@ public class Targeting : MonoBehaviour
     }
 
     public virtual void Retarget(float range){
-          switch(Mode){
-                case TargetingMode.First:
-                    TargetFirst(range);
-                    break;
-                case TargetingMode.Strong:
-                    TargetStrongest(range);
-                    break;
-                case TargetingMode.Weak:
-                    TargetWeakest(range);
-                    break;
-                case TargetingMode.Last:
-                    TargetLast(range);
-                    break;
-                case TargetingMode.Closest:
-                    TargetClosest(range, Target);
-                    break;
-                case TargetingMode.ClosestNew:
-                    TargetClosestNew(range);
-                    break;
+        TargetingHelper();
+    }
+
+    private void TargetingHelper(){
+        float savedValue = getInitialSavedValue();
+        TargetSet = false;
+        GameObject tempTarget = null;
+        GameObject[] targetableEnemies = GetTargetableEnemies();
+
+        for(int i = 0; i < targetableEnemies.Length; i++){
+            Unit enemy = targetableEnemies[i].GetComponent<Unit>();
+            if(Vector3.Distance(targetableEnemies[i].transform.position, transform.position) < range && !enemy.IsOverKilled()){
+                float compareValue = getCompareValue(targetableEnemies[i]);
+                
+                if(compareValues(compareValue, savedValue)){
+                    savedValue = compareValue;
+                    TargetSet = true;
+                    tempTarget = targetableEnemies[i];
+                }
+            }
+        }  
+        if(TargetSet){
+            SetTarget(tempTarget);
+        }
+    }
+
+
+    private GameObject[] GetTargetableEnemies(){
+        GameObject[] enemies = Manager.GetAliveUnits();
+        GameObject[] targetableEnemies;
+        if(excludePreviouslyTargeted()){
+            targetableEnemies = enemies.Where(e => !alreadyTargeted.Any(e2 => e == e2)).ToArray();
+        }else{
+            targetableEnemies = enemies;
+        }
+
+        return targetableEnemies;
+    }
+
+    private bool excludePreviouslyTargeted(){
+        switch(Mode){
+            case TargetingMode.First:
                 case TargetingMode.FirstNew:
-                    TargetFirstNew(range);
-                    break;
+                case TargetingMode.ClosestNew:
+                    return true;
+                case TargetingMode.Last:
+                case TargetingMode.Closest:
+                case TargetingMode.Strong:
+                    return false;
                 default:
-                    TargetFirst(range);
-                    break;
+                    return false;
+        }
+    }
+    private float getInitialSavedValue(){
+        switch(Mode){
+            case TargetingMode.First:
+                case TargetingMode.FirstNew:
+                case TargetingMode.Strong:
+                    return 0;
+                case TargetingMode.Last:
+                case TargetingMode.Closest:
+                case TargetingMode.ClosestNew:
+                    return 100000;
+                default:
+                    return 0;
+        }
+    }
+
+    private bool compareValues(float newValue, float oldValue){
+        switch(Mode){
+            case TargetingMode.First:
+                case TargetingMode.FirstNew:
+                case TargetingMode.Strong:
+                    return newValue > oldValue;
+                case TargetingMode.Last:
+                case TargetingMode.Closest:
+                case TargetingMode.ClosestNew:
+                    return newValue < oldValue;
+                default:
+                    return false;
+        }
+    }
+
+    private float getCompareValue(GameObject enemy){
+        switch(Mode){
+                case TargetingMode.First:
+                case TargetingMode.FirstNew:
+                case TargetingMode.Last:
+                    return enemy.GetComponent<Unit>().GetDistanceTraveled();
+                case TargetingMode.Strong:
+                    return enemy.GetComponent<Unit>().Tier * 1000 + enemy.GetComponent<Unit>().GetDistanceTraveled();
+                case TargetingMode.Closest:
+                case TargetingMode.ClosestNew:
+                    return Vector3.Distance(enemy.transform.position, transform.position);
+                default:
+                    return 0;
           }
-    }
-
-    protected virtual void TargetClosestNew(float range){
-        GameObject[] enemies = Manager.GetComponent<RoundManager>().GetAliveUnits();
-        float leastDistance = range + 1f;
-        TargetSet = false;
-        GameObject tempTarget = null;
-        GameObject[] unTargetedEnemies = enemies.Where(e => !alreadyTargeted.Any(e2 => e == e2)).ToArray();
-
-        for(int i = 0; i < unTargetedEnemies.Length; i++){
-            Unit enemy = unTargetedEnemies[i].GetComponent<Unit>();
-            if(Vector3.Distance(unTargetedEnemies[i].transform.position, transform.position) < range && !enemy.IsOverKilled()){
-                float distance = Vector3.Distance(unTargetedEnemies[i].transform.position, transform.position);
-                if(distance < leastDistance){
-                    TargetSet = true;
-                    tempTarget = unTargetedEnemies[i];
-                    
-                    leastDistance = distance;
-                }
-            }
-        }  
-        if(TargetSet){
-            SetTarget(tempTarget);
-        }
-        
-    }
-
-    protected virtual void TargetClosest(float range, GameObject previousTarget = null){
-        GameObject[] enemies = Manager.GetComponent<RoundManager>().GetAliveUnits();
-        float leastDistance = range + 1f;
-        TargetSet = false;
-        GameObject tempTarget = null;
-
-        for(int i = 0; i < enemies.Length; i++){
-            Unit enemy = enemies[i].GetComponent<Unit>();
-            if(previousTarget != enemies[i] && Vector3.Distance(enemies[i].transform.position, transform.position) < range && !enemy.IsOverKilled()){
-                float distance = Vector3.Distance(enemies[i].transform.position, transform.position);
-                if(distance < leastDistance){
-                    TargetSet = true;
-                    tempTarget = enemies[i];
-                    leastDistance = distance;
-                }
-            }
-        }  
-
-        if(TargetSet){
-            SetTarget(tempTarget);
-        }
-    }
-
-    protected virtual void TargetFirst(float range){
-        GameObject[] enemies = Manager.GetComponent<RoundManager>().GetAliveUnits();
-        float maxDistanceTraveled = 0f;
-        TargetSet = false;
-        GameObject tempTarget = null;
-        
-
-        for(int i = 0; i < enemies.Length; i++){
-            Unit enemy = enemies[i].GetComponent<Unit>();
-            if(Vector3.Distance(enemies[i].transform.position, transform.position) < range && !enemy.IsOverKilled()){
-                float lengthTraveled = enemies[i].GetComponent<Unit>().GetDistanceTraveled();
-                if(lengthTraveled > maxDistanceTraveled){
-                    TargetSet = true;
-                    tempTarget = enemies[i];
-                    maxDistanceTraveled = lengthTraveled;
-                }
-            }
-        }  
-
-        if(TargetSet){
-            SetTarget(tempTarget);
-        } 
-    }
-
-    protected virtual void TargetFirstNew(float range){
-        GameObject[] enemies = Manager.GetComponent<RoundManager>().GetAliveUnits();
-        float maxDistanceTraveled = 0f;
-        TargetSet = false;
-        GameObject tempTarget = null;
-        GameObject[] unTargetedEnemies = enemies.Where(e => !alreadyTargeted.Any(e2 => e == e2)).ToArray();
-        enemies = unTargetedEnemies;
-
-        for(int i = 0; i < enemies.Length; i++){
-            Unit enemy = enemies[i].GetComponent<Unit>();
-            if(Vector3.Distance(enemies[i].transform.position, transform.position) < range && !enemy.IsOverKilled()){
-                float lengthTraveled = enemies[i].GetComponent<Unit>().GetDistanceTraveled();
-                if(lengthTraveled > maxDistanceTraveled){
-                    TargetSet = true;
-                    tempTarget = enemies[i];
-                    maxDistanceTraveled = lengthTraveled;
-                }
-            }
-        }  
-
-        if(TargetSet){
-            SetTarget(tempTarget);
-        } 
-    }
-
-    protected virtual void TargetStrongest(float range){
-        GameObject[] enemies = Manager.GetComponent<RoundManager>().GetAliveUnits();
-        float highestTier = 0f;
-        float maxDistanceTraveled = 0f;
-        TargetSet = false;
-        GameObject tempTarget = null;
-
-        for(int i = 0; i < enemies.Length; i++){
-            Unit enemy = enemies[i].GetComponent<Unit>();
-            if(Vector3.Distance(enemies[i].transform.position, transform.position) < range && !enemy.IsOverKilled()){
-                float enemyTier = enemies[i].GetComponent<Unit>().Tier;
-                float lengthTraveled = enemies[i].GetComponent<Unit>().GetDistanceTraveled();
-                if(enemyTier > highestTier && maxDistanceTraveled < lengthTraveled){
-                    TargetSet = true;
-                    tempTarget = enemies[i];
-                    highestTier = enemyTier;
-                    maxDistanceTraveled = lengthTraveled;
-                }
-            }
-        }  
-
-        if(TargetSet){
-            SetTarget(tempTarget);
-        }
-    }
-    
-    protected virtual void TargetWeakest(float range){
-        GameObject[] enemies = Manager.GetComponent<RoundManager>().GetAliveUnits();
-        float lowestTier = 100f;
-        float maxDistanceTraveled = 0f;
-        TargetSet = false;
-        GameObject tempTarget = null;
-
-        for(int i = 0; i < enemies.Length; i++){
-            Unit enemy = enemies[i].GetComponent<Unit>();
-            if(Vector3.Distance(enemies[i].transform.position, transform.position) < range && !enemy.IsOverKilled()){
-                float enemyTier = enemies[i].GetComponent<Unit>().Tier;
-                float lengthTraveled = enemies[i].GetComponent<Unit>().GetDistanceTraveled();
-                if(enemyTier < lowestTier && maxDistanceTraveled < lengthTraveled){
-                    TargetSet = true;
-                    tempTarget = enemies[i];
-                    lowestTier = enemyTier;
-                    maxDistanceTraveled = lengthTraveled;
-                }
-            }
-        }  
-
-        if(TargetSet){
-            SetTarget(tempTarget);
-        }
-    }
-
-    protected virtual void TargetLast(float range){
-        GameObject[] enemies = Manager.GetComponent<RoundManager>().GetAliveUnits();
-        float leastDistanceTraveled = 1000f;
-        TargetSet = false;
-        GameObject tempTarget = null;
-
-        for(int i = 0; i<enemies.Length; i++){
-            Unit enemy = enemies[i].GetComponent<Unit>();
-            if(Vector3.Distance(enemies[i].transform.position, transform.position) < range && !enemy.IsOverKilled()){
-                float lengthTraveled = enemies[i].GetComponent<Unit>().GetDistanceTraveled();
-                if(lengthTraveled < leastDistanceTraveled){
-                    TargetSet = true;
-                    tempTarget = enemies[i];
-                    leastDistanceTraveled = lengthTraveled;
-                }
-            }
-        }
-
-        if(TargetSet){
-            SetTarget(tempTarget);
-        }   
     }
 }

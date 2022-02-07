@@ -11,9 +11,11 @@ public class Targeting : MonoBehaviour
     bool TargetSet = false;
     RoundManager Manager;
     List<GameObject> alreadyTargeted;
+    Transform _transform;
 
     void Awake(){
         alreadyTargeted = new List<GameObject>();
+        _transform = transform;
     }
 
     void Start()
@@ -49,24 +51,24 @@ public class Targeting : MonoBehaviour
     }
 
     public virtual void Retarget(float range){
-        TargetingHelper();
+        TargetingHelper(range);
     }
 
-    private void TargetingHelper(){
+    private void TargetingHelper(float range){
         float savedValue = getInitialSavedValue();
         TargetSet = false;
         GameObject tempTarget = null;
         GameObject[] targetableEnemies = GetTargetableEnemies();
 
         for(int i = 0; i < targetableEnemies.Length; i++){
-            Unit enemy = targetableEnemies[i].GetComponent<Unit>();
-            if(Vector3.Distance(targetableEnemies[i].transform.position, transform.position) < range && !enemy.IsOverKilled()){
-                float compareValue = getCompareValue(targetableEnemies[i]);
+            GameObject enemyObject = targetableEnemies[i];
+            if(Vector3.Distance(enemyObject.transform.position, _transform.position) < range && !enemyObject.GetComponent<Unit>().IsOverKilled()){
+                float compareValue = getCompareValue(enemyObject);
                 
                 if(compareValues(compareValue, savedValue)){
                     savedValue = compareValue;
                     TargetSet = true;
-                    tempTarget = targetableEnemies[i];
+                    tempTarget = enemyObject;
                 }
             }
         }  
@@ -102,18 +104,19 @@ public class Targeting : MonoBehaviour
                     return false;
         }
     }
+
     private float getInitialSavedValue(){
         switch(Mode){
             case TargetingMode.First:
                 case TargetingMode.FirstNew:
                 case TargetingMode.Strong:
-                    return 0;
+                    return 0f;
                 case TargetingMode.Last:
                 case TargetingMode.Closest:
                 case TargetingMode.ClosestNew:
-                    return 100000;
+                    return 100000f;
                 default:
-                    return 0;
+                    return 0f;
         }
     }
 
@@ -139,12 +142,12 @@ public class Targeting : MonoBehaviour
                 case TargetingMode.Last:
                     return enemy.GetComponent<Unit>().GetDistanceTraveled();
                 case TargetingMode.Strong:
-                    return enemy.GetComponent<Unit>().Tier * 1000 + enemy.GetComponent<Unit>().GetDistanceTraveled();
+                    return enemy.GetComponent<Unit>().Tier * 1000f + enemy.GetComponent<Unit>().GetDistanceTraveled();
                 case TargetingMode.Closest:
                 case TargetingMode.ClosestNew:
                     return Vector3.Distance(enemy.transform.position, transform.position);
                 default:
-                    return 0;
+                    return 0f;
           }
     }
 }

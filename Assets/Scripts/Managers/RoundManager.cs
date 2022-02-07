@@ -23,6 +23,7 @@ public class RoundManager : MonoBehaviour
     void Awake(){
         _moneyManager = GetComponent<MoneyManager>();
     }
+    
     void Start()
     {
         Grid = GetComponent<GridSystem>();
@@ -38,16 +39,20 @@ public class RoundManager : MonoBehaviour
                         break;
                     }
                 }
-            }else{
-                if(aliveEnemies.Count == 0){
-                    _moneyManager.GainMoney(10 + round * 5);
-                    round++;
-                    roundActive = false;
-                }
-                
             }
+
             roundTick++;
         }
+    }
+
+    private void EndRound(){
+        GainMoneyForRound();
+        round++;
+        roundActive = false;
+    }
+
+    private int GainMoneyForRound(){
+        _moneyManager.GainMoney(10 * round*5);
     }
 
     public void StartRound(){
@@ -55,9 +60,16 @@ public class RoundManager : MonoBehaviour
         SpawnsListPosition = 0;
         roundActive = true;
 
+        LoadRound();
+        ReRollAllTowers();
+    }
+
+    private void LoadRound(){
         roundSpawns = readRoundFromFile(round);
         roundSpawns.Sort((a, b) => a.getSpawnTime().CompareTo(b.getSpawnTime()));
+    }
 
+    private void ReRollAllTowers(){
         foreach(GameObject tower in GetComponent<BuildManager>().placedTowers){
             tower.GetComponent<Tower>().ReRoll();
         }
@@ -76,10 +88,16 @@ public class RoundManager : MonoBehaviour
     }
 
     public void KillUnit(GameObject unit){
-        EnemyRecentlyDied = true;
         int index = aliveEnemies.IndexOf((true, unit));
         aliveEnemies[index] = (false, null);
         Destroy(unit);
+
+        if(aliveEnemies.Count == 1){
+            RemoveDeadEnemies();
+            EndRound();
+        }else{
+            EnemyRecentlyDied = true;
+        }
     }
 
     void RemoveDeadEnemies(){

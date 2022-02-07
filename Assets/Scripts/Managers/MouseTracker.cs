@@ -20,6 +20,7 @@ public class MouseTracker : MonoBehaviour
         gridSystem = GetComponent<GridSystem>();
         UIManager = GetComponent<UIManager>();
     }
+    
     void Start()
     {
         foreach(GameObject obj in GameObject.FindGameObjectsWithTag("UISelectable")){
@@ -35,19 +36,31 @@ public class MouseTracker : MonoBehaviour
         if(Input.GetMouseButtonDown(0)){
             Click();
         }
-
     }
 
-
-
     void Click(){
+        HideTowerRange();
+
+        bool objectSelected = GetSelectedObject();
+
+        if(!objectSelected){
+            UIManager.CloseSelectedMenu();
+            return;
+        }
+
+        selectedObject.GetComponent<Selectable>().OnClick();
+    }
+
+    void HideTowerRange(){
         if(selectedObject != null){
             Tower tower = selectedObject.GetComponent<Tower>();
             if(tower != null){
                 tower.HideRange();
             }
         }
-        
+    }
+
+    bool GetSelectedObject(){
         foreach(GameObject selectableObject in allSelectableObjects){
             SpriteRenderer renderer = selectableObject.GetComponent<SpriteRenderer>();
             float halfWidth = renderer.bounds.size.x/2;
@@ -55,16 +68,10 @@ public class MouseTracker : MonoBehaviour
 
             if(InRectangle(selectableObject.transform.position, halfWidth, halfHeight)){
                 selectedObject = selectableObject;
-                if(selectableObject.GetComponent<Selectable>().IsUIElement){
-                    selectedObject.GetComponent<Selectable>().OnClick();
-                }else{
-                    selectedObject.GetComponent<Selectable>().OnClick();
-                }
-
-                return;
+                return true;
             }
         }
-        UIManager.CloseSelectedMenu();
+        return false;
     }
 
     bool InRectangle(Vector3 objectPos, float halfWidth, float halfHeight){

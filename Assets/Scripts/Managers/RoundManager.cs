@@ -9,15 +9,12 @@ public class RoundManager : MonoBehaviour
     List<EnemySpawn> roundSpawns = new List<EnemySpawn>();
     public List<(bool, GameObject)> aliveEnemies = new List<(bool, GameObject)>();
     GridSystem Grid;
-
     public GameObject[] unitPrefabs;
-
     int roundTick = 0;
     bool roundActive = false;
     int round = 1;
     int SpawnsListPosition = 0;
     bool EnemyRecentlyDied = false;
-
     MoneyManager _moneyManager;
 
     void Awake(){
@@ -52,7 +49,7 @@ public class RoundManager : MonoBehaviour
     }
 
     private int GainMoneyForRound(){
-        _moneyManager.GainMoney(10 * round*5);
+        _moneyManager.GainMoney(10 + round * 5);
     }
 
     public void StartRound(){
@@ -122,30 +119,17 @@ public class RoundManager : MonoBehaviour
             TextAsset textasset = (TextAsset)Resources.Load("rounds/round" + round.ToString());
             string text = textasset.text;
             string[] lines = text.Split('\n');
-
             
             List<EnemySpawn> returnList = new List<EnemySpawn>();
             foreach(string line in lines){
                 if(line == ""){
                     return returnList;
                 }
-                
-                string[] values = line.Split(' ');
-                int spawnAtTick = int.Parse(values[0]);
-                GameObject enemyToSpawn = unitPrefabs[int.Parse(values[1])];
-                if(values.Length > 2){
-                    int amount = int.Parse(values[2]);
-                    int spawnSeperator = 1;
-                    if(values.Length > 3){
-                        spawnSeperator = int.Parse(values[3]);
-                    }
-                        for(int i = 0; i < amount; i++){
-                            int addedTickTime = i*spawnSeperator;
-                            EnemySpawn nextSpawn = new EnemySpawn(spawnAtTick+addedTickTime, enemyToSpawn);
-                            returnList.Add(nextSpawn);
-                        }
-                }else{
-                    EnemySpawn nextSpawn = new EnemySpawn(spawnAtTick, enemyToSpawn);
+
+                RoundRowValues values = RoundRowValues(line);
+                for(int i = 0; i < values.amount; i++){
+                    int addedTickTime = i*values.spawnSeperator;
+                    EnemySpawn nextSpawn = new EnemySpawn(values.startTick+addedTickTime, values.enemyToSpawn);
                     returnList.Add(nextSpawn);
                 }
             }
@@ -155,8 +139,30 @@ public class RoundManager : MonoBehaviour
             Debug.Log(e);
             return readRoundFromFile(1);
         }
-        
-       
+    }
+}
+
+class RoundRowValues{
+    public int startTick;
+    public int enemyToSpawn;
+    public int amount = 1;
+    public int spawnSeperator = 0;
+
+    public RoundRowValues(string row){
+        try{
+            string[] values = line.Split(' ');
+            startTick = values[0];
+            enemyToSpawn = values[1];
+            amount = 1;
+            spawnSeperator = 0;
+
+            if(values.Length > 2){
+                amount = values[2];
+                spawnSeperator = values[3];
+            }
+        }catch(Exception e){
+            Debug.Log(e);
+        }
     }
 }
 

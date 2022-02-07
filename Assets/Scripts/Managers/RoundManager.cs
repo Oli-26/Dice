@@ -23,7 +23,7 @@ public class RoundManager : MonoBehaviour
     void Awake(){
         _moneyManager = GetComponent<MoneyManager>();
     }
-    
+
     void Start()
     {
         Grid = GetComponent<GridSystem>();
@@ -126,6 +126,10 @@ public class RoundManager : MonoBehaviour
             
             List<EnemySpawn> returnList = new List<EnemySpawn>();
             foreach(string line in lines){
+                if(line == ""){
+                    return returnList;
+                }
+                
                 string[] values = line.Split(' ');
                 int spawnAtTick = int.Parse(values[0]);
                 GameObject enemyToSpawn = unitPrefabs[int.Parse(values[1])];

@@ -8,6 +8,8 @@ public class Button : Selectable
     public int value = 0;
     public GameObject attatchedTo;
     public GameObject Grid;
+
+
     void Start()
     {
         Grid = GameObject.FindWithTag("Grid");
@@ -33,9 +35,22 @@ public class Button : Selectable
             case ButtonType.TowerPower:
                 UsePower();
                 break;
+            case ButtonType.ChangeTargeting:
+                ChangeTargeting();
+                break;
+            case ButtonType.SellTower:
+                SellTower();
+                break;
             default:
                 break;
         }   
+    }
+
+    void SellTower(){
+        if(attatchedTo.GetComponent<Tower>() != null){
+            Grid.GetComponent<BuildManager>().SellTower(attatchedTo);
+            Grid.GetComponent<UIManager>().CloseSelectedMenu();
+        }
     }
 
     void BuyTower(){
@@ -56,8 +71,20 @@ public class Button : Selectable
         }
     }
 
+    void ChangeTargeting(){
+        if(attatchedTo.GetComponent<Targeting>() != null){
+            value++;
+            if(value > 2){
+                value = 0;
+            }
+            
+            attatchedTo.GetComponent<Targeting>().SetTargetingMode(value);
+            Object[] sprites = Resources.LoadAll("ButtonSprites/arrow");
+            GetComponent<SpriteRenderer>().sprite = (Sprite)sprites[value+1];
+        }
+    }
+
     public void Attatch(GameObject attatch){
         attatchedTo = attatch;
     }
-
 }

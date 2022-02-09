@@ -44,7 +44,11 @@ public class BuildManager : MonoBehaviour
         guardAgainstInstantPlacement = true;
         placedTowers.Add(towerBeingPlaced);
         tracker.AddSelectableObject(towerBeingPlaced);
-        towerBeingPlaced.GetComponent<Tower>().HideRange();
+        towerBeingPlaced.GetComponent<Tower>().Place();
+    }
+
+    public void RemoveTower(GameObject tower){
+        placedTowers.Remove(tower);
     }
 
     public void PurchaseTower(int id){
@@ -57,6 +61,16 @@ public class BuildManager : MonoBehaviour
             guardAgainstInstantPlacement= true;
             moneyManager.SpendMoney(cost);
         }
+    }
+
+    public void SellTower(GameObject tower){
+        int cost = tower.GetComponent<Tower>().cost;
+        moneyManager.GainMoney(cost);
+        
+        tracker.RemoveSelectableObject(tower);
+        RemoveTower(tower);
+        Destroy(tower);
+
     }
 
     public Vector3 SnapToGrid(Vector3 pos){

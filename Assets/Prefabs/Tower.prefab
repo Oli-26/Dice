@@ -99,6 +99,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2ce0e2aa6c5a364290c5ea212ce1695, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Mode: 0
 --- !u!114 &731630653306634101
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -113,8 +114,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsUIElement: 0
   IsActive: 1
+  layer: 0
   damage: 1.11
-  shotSpeed: 0.15
+  shotSpeed: 0.08
   shotCoolDown: 1.5
   range: 2.5
   diceNumber: 1
@@ -128,7 +130,7 @@ MonoBehaviour:
   - {fileID: -8501897796974355982, guid: 8e947024b275c044baaa7f00f3a189b6, type: 3}
   - {fileID: 1879731190769728224, guid: 8e947024b275c044baaa7f00f3a189b6, type: 3}
   defaultSprite: {fileID: 1538477293, guid: 8e947024b275c044baaa7f00f3a189b6, type: 3}
-  cost: 25
+  cost: 50
 --- !u!1 &8797694216732865576
 GameObject:
   m_ObjectHideFlags: 0
@@ -145,7 +147,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &7638791558814560012
 Transform:
   m_ObjectHideFlags: 0
@@ -201,7 +203,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 3
   m_Sprite: {fileID: -2413806693520163455, guid: ebe73ca9363db456bacf42c025bb4847,
     type: 3}
   m_Color: {r: 0.8773585, g: 0.87190986, b: 0.28555536, a: 0.078431375}

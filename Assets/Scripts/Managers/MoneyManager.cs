@@ -13,7 +13,7 @@ public class MoneyManager : MonoBehaviour
 
     void Start()
     {
-        money= 50;
+        money= 100;
     }
 
 

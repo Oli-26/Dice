@@ -7,10 +7,10 @@ public class RollAnimation : MonoBehaviour
     public Sprite[] sprites;
     int frame;
     int frameTime;
-    SpriteRenderer renderer;
+    SpriteRenderer _renderer;
 
     void Awake(){
-        renderer = GetComponent<SpriteRenderer>();
+        _renderer = GetComponent<SpriteRenderer>();
     }
 
     void Start()
@@ -24,7 +24,7 @@ public class RollAnimation : MonoBehaviour
             frame++;
             frameTime = 0;
             if(frame < sprites.Length){
-                renderer.sprite = sprites[frame];
+                _renderer.sprite = sprites[frame];
             }else{
                 Destroy(gameObject);
             }

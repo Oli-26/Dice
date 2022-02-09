@@ -11,6 +11,7 @@ public class MouseTracker : MonoBehaviour
     GridSystem gridSystem;
     UIManager UIManager;
     GameObject selectedObject;
+    GameObject lastSelectedTower;
 
     public GameObject towerUsingPower;
     public bool buffActive = false;
@@ -39,24 +40,32 @@ public class MouseTracker : MonoBehaviour
     }
 
     void Click(){
-        HideTowerRange();
-
+        GameObject previouslySelected = selectedObject;
         bool objectSelected = GetSelectedObject();
 
         if(!objectSelected){
             UIManager.CloseSelectedMenu();
+            HideTowerRange(lastSelectedTower);
             return;
         }
 
+        
+        Selectable selected = selectedObject.GetComponent<Selectable>();
+
+        if(!selected.IsUIElement){
+            HideTowerRange(lastSelectedTower);
+        }
+
         selectedObject.GetComponent<Selectable>().OnClick();
+
+        if(selectedObject.GetComponent<Tower>() != null){
+            lastSelectedTower = selectedObject;
+        }
     }
 
-    void HideTowerRange(){
-        if(selectedObject != null){
-            Tower tower = selectedObject.GetComponent<Tower>();
-            if(tower != null){
-                tower.HideRange();
-            }
+    void HideTowerRange(GameObject tower){
+        if(tower != null){
+            tower.GetComponent<Tower>().HideRange();
         }
     }
 
@@ -66,7 +75,7 @@ public class MouseTracker : MonoBehaviour
             float halfWidth = renderer.bounds.size.x/2;
             float halfHeight = renderer.bounds.size.y/2;
 
-            if(InRectangle(selectableObject.transform.position, halfWidth, halfHeight)){
+            if(selectableObject.GetComponent<Selectable>().IsActive && InRectangle(selectableObject.transform.position, halfWidth, halfHeight)){
                 selectedObject = selectableObject;
                 return true;
             }
@@ -97,5 +106,19 @@ public class MouseTracker : MonoBehaviour
         GameObject[] toRemove = new GameObject[]{obj};
         IEnumerable<GameObject> newList = allSelectableObjects.Except(toRemove);
         allSelectableObjects = newList.ToList();
+    }
+
+    public void DisableLayer(int layer){
+        foreach(GameObject obj in allSelectableObjects){
+            Selectable selectable = obj.GetComponent<Selectable>();
+            selectable.DisableLayer(layer);
+        }
+    }
+
+    public void EnableLayer(int layer){
+        foreach(GameObject obj in allSelectableObjects){
+            Selectable selectable = obj.GetComponent<Selectable>();
+            selectable.EnableLayer(layer);
+        }
     }
 }

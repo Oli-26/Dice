@@ -56,7 +56,7 @@ public class Tower : Selectable
         }
     }
 
-    public void ReRoll(){
+    public virtual void ReRoll(){
         int random = Random.Range(0, 5);
         diceNumber = random + 1;
         UpdateNumberSprite();
@@ -110,7 +110,22 @@ public class Tower : Selectable
 
     }
 
-    private void GetRangeIndicator(){
+    private Transform GetRangeIndicator(){
         return _transform.GetChild(0);
+    }
+
+    public virtual void Place(){
+        HideRange();
+    }
+
+    public void ReduceDiceNumber(){
+        if(diceNumber == 1){
+            return;
+        }
+
+        diceNumber--;
+        UpdateNumberSprite();
+        _effects.RollAt(_transform.position);
+        buffed = false;
     }
 }

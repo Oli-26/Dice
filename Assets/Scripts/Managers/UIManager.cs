@@ -16,10 +16,12 @@ public class UIManager : MonoBehaviour
     public GameObject moneyIndicator;
     TMP_Text moneyIndicatorText;
     SpriteRenderer moneyIndicatorRenderer;
+    MouseTracker mouseTracker;
     int moneyFlash;
 
     void Start()
     {
+        mouseTracker = GetComponent<MouseTracker>();
         selectedMenuPosition = selectedMenu.transform.position;
         moneyIndicatorText = moneyIndicator.GetComponent<TextMeshPro>();
         moneyIndicatorRenderer = moneyIndicator.transform.parent.gameObject.GetComponent<SpriteRenderer>();
@@ -49,6 +51,8 @@ public class UIManager : MonoBehaviour
             selectedMenuPosition = selectedMenuPosition + new Vector3(-4.35f, 0f, 0f);
             selectedMenuOpen = !selectedMenuOpen;
             selectedMenuMoving = true;
+            mouseTracker.DisableLayer(1);
+            mouseTracker.EnableLayer(2);
         }
     }
 
@@ -57,12 +61,16 @@ public class UIManager : MonoBehaviour
             selectedMenuPosition = selectedMenuPosition + new Vector3(4.35f, 0f, 0f);
             selectedMenuOpen = !selectedMenuOpen;
             selectedMenuMoving = true;
+            mouseTracker.EnableLayer(1);
+            mouseTracker.DisableLayer(2);
         }
     }
     
     public void UpdateSelectedMenu(GameObject tower, Sprite towerSprite){
         GameObject.Find("UsePower").GetComponent<Button>().Attatch(tower);
-        selectedMenu.transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = towerSprite;
+        GameObject.Find("SellTower").GetComponent<Button>().Attatch(tower);
+        GameObject.Find("Targeting").GetComponent<Button>().Attatch(tower);
+        GetTowerIndicator().GetComponent<SpriteRenderer>().sprite = towerSprite;
     }
 
     public void UpdateMoneyUI(int amount){
@@ -74,5 +82,9 @@ public class UIManager : MonoBehaviour
 
         moneyIndicatorText.text = amount+"";
         
+    }
+
+    public Transform GetTowerIndicator(){
+        return selectedMenu.transform.GetChild(0);
     }
 }

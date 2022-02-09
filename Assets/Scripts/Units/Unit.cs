@@ -6,11 +6,11 @@ public class Unit : MonoBehaviour
 {
     protected Transform _transform;
     public int PathPosition = 1;
-    Vector3 TargetPosition;
-    GridSystem Grid;
-    RoundManager Manager;
-    ItemSpawner Spawner;
-    bool Moving = true;
+    protected Vector3 TargetPosition;
+    protected GridSystem Grid;
+    protected RoundManager Manager;
+    protected ItemSpawner Spawner;
+    protected bool Moving = true;
     public float health = 1f;
     public int worth = 1;
     public float distanceTraveled = 0;
@@ -18,7 +18,7 @@ public class Unit : MonoBehaviour
     public float speed = 0.035f;
     public bool isShielded = false;
     public float incomingDamage = 0f;
-    int slow = 0;
+    protected int slow = 0;
 
     protected void Awake(){
         _transform = transform;
@@ -56,9 +56,10 @@ public class Unit : MonoBehaviour
 
     protected void MoveTowardsNextPathPoint(){
         Vector3 unitMovementVector = Vector3.Normalize(TargetPosition - _transform.position);
-        Vector3 changeVector = unitMovementVector * speed * (1f - slow * 0.001f);
+        float magnitude = speed * (1f - slow * 0.001f);
+        Vector3 changeVector = unitMovementVector * magnitude;
         _transform.position += changeVector;
-        distanceTraveled += Vector3.Distance(new Vector3(0f, 0f, 0f), changeVector);
+        distanceTraveled += magnitude;
     }
 
     public float GetDistanceTraveled(){
@@ -83,8 +84,18 @@ public class Unit : MonoBehaviour
     }
 
     public void TakeDamage(float damage){
-        health -= ShieldReduction(damage);
-        incomingDamage -= ShieldReduction(damage);
+        float reducedDamage = ShieldReduction(damage);
+        health -= reducedDamage;
+        incomingDamage -= reducedDamage;
+
+        if(health <= 0){
+            Die();
+        }
+    }
+
+    public void TakeLaserDamage(float damage){
+        float reducedDamage = ShieldReduction(damage);
+        health -= reducedDamage;
 
         if(health <= 0){
             Die();
@@ -122,6 +133,10 @@ public class Unit : MonoBehaviour
     }
 
     public void RemoveShield(){
+        if(!isShielded){
+            return;
+        }
+
         GetShieldObject().SetActive(false);
         incomingDamage =  incomingDamage/0.6f;
         isShielded = false;

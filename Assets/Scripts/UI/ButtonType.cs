@@ -1,3 +1,3 @@
 
 
-public enum ButtonType{BuyTower, StartRound, TowerPower}
+public enum ButtonType{BuyTower, StartRound, TowerPower, SellTower, ChangeTargeting}

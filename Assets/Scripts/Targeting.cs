@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-public enum TargetingMode {First, Strong, Weak, Last, Closest, ClosestNew, FirstNew};
+public enum TargetingMode {First, Strong, Weak, Last, Closest, ClosestNew, FirstNew, Random};
 public class Targeting : MonoBehaviour
 {
-    protected TargetingMode Mode = TargetingMode.First;
+    public TargetingMode Mode = TargetingMode.First;
     GameObject Target;
     bool TargetSet = false;
     RoundManager Manager;
@@ -40,6 +40,23 @@ public class Targeting : MonoBehaviour
         Mode = m;
     }
 
+    public void SetTargetingMode(int id){
+        switch(id){
+            case 0:
+                Mode = TargetingMode.First;
+                break;
+            case 1:
+                Mode = TargetingMode.Last;
+                break;
+            case 2:
+                Mode = TargetingMode.Strong;
+                break;
+            default:
+                Mode = TargetingMode.First;
+                break;
+        }
+    }
+
     public void ForgetPreviousTargets(){
         alreadyTargeted = new List<GameObject>();
     }
@@ -51,18 +68,37 @@ public class Targeting : MonoBehaviour
     }
 
     public virtual void Retarget(float range){
-        TargetingHelper(range);
+         switch(Mode){
+                case TargetingMode.Random:
+                    RandomTargetingHelper(range);
+                    break;
+                default:
+                    TargetingHelper(range);
+                    break;
+        }
+    }
+
+    private void RandomTargetingHelper(float range){
+        TargetSet = false;
+        GameObject[] targetableEnemies = GetTargetableEnemies(range);
+        if(targetableEnemies.Length == 0){
+            return;
+        }
+
+        int randomTarget = Random.Range(0, targetableEnemies.Length);
+        SetTarget(targetableEnemies[randomTarget]);
+
     }
 
     private void TargetingHelper(float range){
         float savedValue = getInitialSavedValue();
         TargetSet = false;
         GameObject tempTarget = null;
-        GameObject[] targetableEnemies = GetTargetableEnemies();
+        GameObject[] targetableEnemies = GetTargetableEnemies(range);
 
         for(int i = 0; i < targetableEnemies.Length; i++){
             GameObject enemyObject = targetableEnemies[i];
-            if(Vector3.Distance(enemyObject.transform.position, _transform.position) < range && !enemyObject.GetComponent<Unit>().IsOverKilled()){
+            if(enemyObject && !enemyObject.GetComponent<Unit>().IsOverKilled()){
                 float compareValue = getCompareValue(enemyObject);
                 
                 if(compareValues(compareValue, savedValue)){
@@ -78,13 +114,14 @@ public class Targeting : MonoBehaviour
     }
 
 
-    private GameObject[] GetTargetableEnemies(){
+    private GameObject[] GetTargetableEnemies(float range){
         GameObject[] enemies = Manager.GetAliveUnits();
+        GameObject[] enemiesInRange = enemies.Where(e => e != null && Vector3.Distance(e.transform.position, _transform.position) < range).ToArray();
         GameObject[] targetableEnemies;
         if(excludePreviouslyTargeted()){
-            targetableEnemies = enemies.Where(e => !alreadyTargeted.Any(e2 => e == e2)).ToArray();
+            targetableEnemies = enemiesInRange.Where(e => !alreadyTargeted.Any(e2 => e == e2)).ToArray();
         }else{
-            targetableEnemies = enemies;
+            targetableEnemies = enemiesInRange;
         }
 
         return targetableEnemies;
@@ -92,10 +129,10 @@ public class Targeting : MonoBehaviour
 
     private bool excludePreviouslyTargeted(){
         switch(Mode){
-            case TargetingMode.First:
                 case TargetingMode.FirstNew:
                 case TargetingMode.ClosestNew:
                     return true;
+                case TargetingMode.First:
                 case TargetingMode.Last:
                 case TargetingMode.Closest:
                 case TargetingMode.Strong:

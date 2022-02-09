@@ -27,12 +27,11 @@ public class SlowShot : Shot
             _transform.position += unitMovementVector * Speed;
 
         }catch(Exception e){
-            Debug.Log(e);
             Destroy(gameObject);
         }
     }
 
-    public new void Init(GameObject target, float damage, float speed, int slowAmount){
+    public void Init(GameObject target, float damage, float speed, int slowAmount){
         this.slowAmount = slowAmount;
         base.Init(target, damage, speed);
     }

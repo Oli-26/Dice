@@ -11,14 +11,16 @@ public class RoundManager : MonoBehaviour
     GridSystem Grid;
     public GameObject[] unitPrefabs;
     int roundTick = 0;
-    bool roundActive = false;
+    public bool roundActive = false;
     int round = 1;
     int SpawnsListPosition = 0;
     bool EnemyRecentlyDied = false;
     MoneyManager _moneyManager;
+    LaserManager _laserManager;
 
     void Awake(){
         _moneyManager = GetComponent<MoneyManager>();
+        _laserManager = GetComponent<LaserManager>();
     }
 
     void Start()
@@ -29,7 +31,7 @@ public class RoundManager : MonoBehaviour
     void FixedUpdate()
     {
         if(roundActive){
-            if(SpawnsListPosition < roundSpawns.Count - 1){
+            if(SpawnsListPosition < roundSpawns.Count){
                 while(roundTick >= roundSpawns[SpawnsListPosition].getSpawnTime()){
                     SpawnUnit();
                     if(SpawnsListPosition >= roundSpawns.Count){
@@ -43,12 +45,15 @@ public class RoundManager : MonoBehaviour
     }
 
     private void EndRound(){
+        Debug.Log("Round " + round + " ended");
         GainMoneyForRound();
         round++;
         roundActive = false;
+        aliveEnemies = new List<(bool, GameObject)>();
+
     }
 
-    private int GainMoneyForRound(){
+    private void GainMoneyForRound(){
         _moneyManager.GainMoney(10 + round * 5);
     }
 
@@ -56,6 +61,8 @@ public class RoundManager : MonoBehaviour
         roundTick = 0;
         SpawnsListPosition = 0;
         roundActive = true;
+
+        
 
         LoadRound();
         ReRollAllTowers();
@@ -67,6 +74,7 @@ public class RoundManager : MonoBehaviour
     }
 
     private void ReRollAllTowers(){
+        _laserManager.ResetPairings();
         foreach(GameObject tower in GetComponent<BuildManager>().placedTowers){
             tower.GetComponent<Tower>().ReRoll();
         }
@@ -88,30 +96,24 @@ public class RoundManager : MonoBehaviour
         int index = aliveEnemies.IndexOf((true, unit));
         aliveEnemies[index] = (false, null);
         Destroy(unit);
-
-        if(aliveEnemies.Count == 1){
-            RemoveDeadEnemies();
+        RemoveDeadEnemies();
+        if(aliveEnemies.Count == 0){
             EndRound();
-        }else{
-            EnemyRecentlyDied = true;
         }
     }
 
     void RemoveDeadEnemies(){
-        if(EnemyRecentlyDied){
-            List<(bool, GameObject)> tempList =  aliveEnemies.Where(x => x.Item1 == true).ToList();
-            aliveEnemies = tempList;
-            EnemyRecentlyDied = false;
-        }
+        List<(bool, GameObject)> tempList =  aliveEnemies.Where(x => x.Item1 == true).ToList();
+        aliveEnemies = tempList;
+        
     }
 
     public GameObject[] GetAliveUnits(){
-        RemoveDeadEnemies();
         return aliveEnemies.Select(x => x.Item2).ToArray();
     }
 
     public bool IsRoundActive(){
-        return GetAliveUnits().Length != 0;
+        return roundActive;
     }
 
     List<EnemySpawn> readRoundFromFile(int round){
@@ -126,10 +128,10 @@ public class RoundManager : MonoBehaviour
                     return returnList;
                 }
 
-                RoundRowValues values = RoundRowValues(line);
+                RoundRowValues values = new RoundRowValues(line);
                 for(int i = 0; i < values.amount; i++){
                     int addedTickTime = i*values.spawnSeperator;
-                    EnemySpawn nextSpawn = new EnemySpawn(values.startTick+addedTickTime, values.enemyToSpawn);
+                    EnemySpawn nextSpawn = new EnemySpawn(values.startTick+addedTickTime, unitPrefabs[values.enemyToSpawn]);
                     returnList.Add(nextSpawn);
                 }
             }
@@ -150,15 +152,18 @@ class RoundRowValues{
 
     public RoundRowValues(string row){
         try{
-            string[] values = line.Split(' ');
-            startTick = values[0];
-            enemyToSpawn = values[1];
+            string[] values = row.Split(' ');
+            startTick = int.Parse(values[0]);
+            enemyToSpawn = int.Parse(values[1]);
             amount = 1;
             spawnSeperator = 0;
 
             if(values.Length > 2){
-                amount = values[2];
-                spawnSeperator = values[3];
+                amount = int.Parse(values[2]);
+            }
+
+            if(values.Length > 3){
+                spawnSeperator = int.Parse(values[3]);
             }
         }catch(Exception e){
             Debug.Log(e);

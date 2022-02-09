@@ -18,7 +18,7 @@ public class ShockShot : Shot
         _targeting.SetTargetingMode(TargetingMode.ClosestNew);
     }
 
-    public new void Init(GameObject target, float damage, float speed, int bounceCount){
+    public void Init(GameObject target, float damage, float speed, int bounceCount){
         this.count = bounceCount;
         base.Init(target, damage, speed);
         _targeting.SetTarget(target);
@@ -43,6 +43,7 @@ public class ShockShot : Shot
                 _targeting.Retarget(range);
                 if(_targeting.TargetIsSet()){
                     Target = _targeting.GetTarget();
+                    Target.GetComponent<Unit>().TargetedForDamage(Damage);
                 }else{
                     Destroy(gameObject);
                 }

@@ -128,10 +128,10 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: agk_spritesheet_gamebits2_0
+      name: arrow_0
       rect:
         serializedVersion: 2
-        x: 448
+        x: 384
         y: 192
         width: 64
         height: 64
@@ -142,60 +142,18 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 563fe27580b92dd469abd8964d92e72d
-      internalID: 365856499
+      spriteID: defc1a8f2d9388d4abc25f182bc13352
+      internalID: -1196149933
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: agk_spritesheet_gamebits2_1
+      name: arrow_1
       rect:
         serializedVersion: 2
-        x: 448
-        y: 128
-        width: 64
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 1f0956185dec4934e921acc2daa77304
-      internalID: -411828365
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: agk_spritesheet_gamebits2_2
-      rect:
-        serializedVersion: 2
-        x: 448
-        y: 65
-        width: 64
-        height: 63
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: bb625d54404440d4c94682c5df0b0838
-      internalID: 275471418
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: agk_spritesheet_gamebits2_3
-      rect:
-        serializedVersion: 2
-        x: 448
-        y: 0
+        x: 384
+        y: 64
         width: 64
         height: 65
       alignment: 0
@@ -205,8 +163,29 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c07bbb7cbbdcac449a58be30b8938ce4
-      internalID: 1021805345
+      spriteID: 501c35ed56d5f0145b7d3ea0b35d7c25
+      internalID: -1378163242
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: arrow_2
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 0
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 28c5765a33f5819419e6852e971ef04c
+      internalID: -1776370739
       vertices: []
       indices: 
       edges: []
@@ -224,6 +203,9 @@ TextureImporter:
     nameFileIdTable:
       agk_spritesheet_gamebits2_1: -411828365
       agk_spritesheet_gamebits2_3: 1021805345
+      arrow_1: -1378163242
+      arrow_2: -1776370739
+      arrow_0: -1196149933
       agk_spritesheet_gamebits2_0: 365856499
       agk_spritesheet_gamebits2_2: 275471418
   spritePackingTag: 
